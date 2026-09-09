@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a"><title>レアアイテム検索</title>
+  
+<style>
+:root{color-scheme:light;--ink:#172033;--muted:#667085;--line:#e6e9ef;--bg:#f5f7fb;--card:#fff;--accent:#4f46e5;--accent-soft:#eef2ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif}.app-header{background:#0f172a;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 18px 20px}.header-inner{max-width:760px;margin:auto;display:flex;justify-content:space-between;align-items:end;gap:12px}.eyebrow{margin:0 0 5px;color:#a5b4fc;font-size:12px;font-weight:700;letter-spacing:.08em}h1{margin:0;font-size:23px;letter-spacing:.02em}.count-pill{background:#283452;border:1px solid #3b4a70;border-radius:999px;padding:7px 11px;font-size:12px;white-space:nowrap}.container{max-width:760px;margin:auto;padding:16px 14px calc(30px + env(safe-area-inset-bottom))}.search-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 5px 18px #1118270a}.search-box{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:0 10px;color:#94a3b8}.search-box span{font-size:23px;line-height:1;transform:rotate(-20deg)}input,select{font:inherit;color:var(--ink)}.search-box input{width:100%;height:44px;border:0;outline:0;background:transparent;font-size:15px}.clear-button,.dialog-close{border:0;background:transparent;color:#98a2b3;font-size:22px;cursor:pointer;padding:4px}.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}select{width:100%;min-height:40px;border:1px solid var(--line);border-radius:9px;background:white;padding:0 9px;font-size:13px}.section-heading{display:flex;justify-content:space-between;align-items:center;margin:23px 3px 10px}h2{margin:0;font-size:16px}.text-button{border:0;background:none;color:var(--accent);font-size:12px;cursor:pointer}.item-list{display:grid;gap:9px}.item-card{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;box-shadow:0 3px 12px #11182708;transition:transform .12s}.item-card:active{transform:scale(.985)}.item-top{display:flex;align-items:start;justify-content:space-between;gap:10px}.item-name{font-weight:700;font-size:15px;line-height:1.45}.marker{color:#d97706;margin-right:2px}.chevron{color:#98a2b3;font-size:20px;line-height:1}.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.tag{display:inline-flex;align-items:center;border-radius:6px;background:var(--accent-soft);color:#4338ca;padding:4px 7px;font-size:11px}.tag.gray{background:#f2f4f7;color:#667085}.subline{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.5}.empty-state{text-align:center;color:var(--muted);font-size:14px;padding:40px 0}dialog{width:min(680px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:18px;color:var(--ink);box-shadow:0 18px 60px #11182740}dialog::backdrop{background:#0f172a99;backdrop-filter:blur(2px)}.dialog-shell{position:relative;padding:23px 18px 20px;overflow:auto;max-height:calc(100dvh - 24px)}.dialog-close{position:absolute;top:11px;right:11px;width:36px;height:36px;font-size:28px}.detail-title{margin:15px 36px 18px 0;font-size:22px;line-height:1.4}.detail-heading{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.04em;margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}.detail-stat{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:12px;padding:11px 12px 12px;font-size:16px;font-weight:800;color:var(--ink);line-height:1.35;word-break:break-word}.detail-stat small{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.02em;margin-bottom:5px}.drop-row{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:1.1fr 1fr;gap:10px;font-size:13px;line-height:1.55}.drop-row:first-child{border-top:0}.drop-dungeon{font-weight:700}.drop-info{color:var(--muted)}.wiki-link{display:inline-block;color:var(--accent);font-size:13px;text-decoration:none;margin-top:15px}@media (min-width:600px){.item-list{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:repeat(3,1fr)}}
+
+.dungeon-section{background:var(--card);border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 3px 12px #11182708}.dungeon-title{padding:14px 15px 11px;background:#eef2ff;color:#1e1b4b;font-size:16px;font-weight:800}.dungeon-chapter{display:block;color:#6366f1;font-size:11px;margin-bottom:3px;font-weight:700}.difficulty-title{padding:9px 15px 6px;color:var(--muted);font-size:11px;font-weight:700;border-top:1px solid var(--line)}.item-card{display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;border-top:1px solid #f0f1f5;border-radius:0;padding:12px 15px;box-shadow:none}.item-card:active{background:#f8faff}.item-top{min-width:0}.item-card .meta,.item-card .subline{display:none}.item-card .item-name{font-size:14px}
+.detail-info{background:#fff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:10px;padding:14px;margin:10px 0;font-size:14px;line-height:1.7}.detail-label{color:#4338ca;font-size:13px;font-weight:800;margin-bottom:7px}.effect{white-space:pre-wrap;color:#172033;font-weight:600}.stat-table{width:100%;border-collapse:collapse;margin:2px 0 4px;font-size:13px}.stat-table th{text-align:left;font-weight:600;color:var(--muted);padding:6px 8px;border-bottom:1px solid #eef0f4;white-space:nowrap;width:44%}.stat-table td{text-align:right;font-weight:800;color:#172033;padding:6px 8px;border-bottom:1px solid #eef0f4;font-variant-numeric:tabular-nums}.stat-table tr:last-child th,.stat-table tr:last-child td{border-bottom:0}.stat-table td.pos{color:#15803d}.stat-table td.neg{color:#b91c1c}.eff-list{list-style:none;margin:8px 0 2px;padding:0;display:flex;flex-direction:column;gap:5px}.eff-list li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5}.eff-val{flex:0 0 auto;min-width:46px;text-align:center;background:#eef2ff;color:#3730a3;border-radius:6px;padding:2px 7px;font-weight:800;font-size:12px;white-space:nowrap}.eff-lab{color:#172033;padding-top:1px}.restriction{display:inline-block;color:#9a3412;background:#fff7ed;border-radius:5px;padding:2px 6px;font-size:12px;margin-bottom:7px}.price{color:#3730a3;background:#eef2ff;border-radius:6px;padding:4px 7px;font-weight:800;margin-top:9px;display:inline-block}.detail-note{color:#667085;background:#f8fafc;border-radius:6px;padding:6px 8px;font-size:12px;margin-top:8px}
+.item-tags{display:flex;gap:4px;margin-left:auto}.item-tags .tag{white-space:nowrap}
+.monster-link{padding:0;border:0;background:none;color:#4338ca;font:inherit;font-weight:700;cursor:pointer;text-align:left}
+
+.item-card{gap:10px}.owned-check{appearance:none;width:22px;height:22px;flex:0 0 22px;margin:0;border:2px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;position:relative}.owned-check:checked{border-color:#4f46e5;background:#4f46e5}.owned-check:checked::after{content:'✓';position:absolute;left:3px;top:-3px;color:#fff;font-size:17px;font-weight:800}.item-card.is-owned .item-name{color:#64748b;text-decoration:line-through;text-decoration-thickness:1px}.item-card.is-owned{background:#f8fafc}
+.owned-tools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}.owned-tools select,.owned-tools button{min-height:36px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0 7px;font-size:11px;color:var(--ink)}.owned-tools button{cursor:pointer;color:#4338ca;font-weight:700}@media(max-width:390px){.owned-tools{grid-template-columns:1fr 1fr}.owned-tools select{grid-column:1/-1}}
+
+.dungeon-title{cursor:pointer;position:relative;padding-right:42px}.dungeon-title::after{content:'⌃';position:absolute;right:15px;top:50%;font-size:20px;transform:translateY(-55%);color:#6366f1}.dungeon-section.is-collapsed .dungeon-title::after{content:'⌄'}.dungeon-section.is-collapsed>:not(.dungeon-title){display:none}
+.item-list{grid-template-columns:1fr!important}
+
+.mode-tabs{display:flex;flex-wrap:wrap;gap:2px;background:#e9edf5;border-radius:10px;padding:3px;margin-bottom:12px}.mode-tab{width:50%;border:0;border-radius:8px;background:transparent;color:#667085;padding:9px;font-weight:700;cursor:pointer}.mode-tab.active{background:#fff;color:#4338ca;box-shadow:0 2px 7px #11182712}#partyView .filter-row{margin-top:0}.party-note{color:var(--muted);font-size:12px;line-height:1.6;margin:2px 2px 12px}.imp-badge{flex:0 0 auto;display:inline-block;min-width:38px;text-align:center;border-radius:6px;padding:3px 5px;font-size:10px;font-weight:800;letter-spacing:-1.5px}.imp-3{background:#fef3c7;color:#b45309}.imp-2{background:#e0e7ff;color:#4338ca}.imp-1{background:#eef2f6;color:#64748b}.search-card[hidden],.section-heading[hidden],#itemList[hidden],#partyView[hidden],#buildsView[hidden],#guideView[hidden],#checkView[hidden],#emptyState[hidden]{display:none!important}.mode-tabs .mode-tab{width:auto;flex:1 1 28%;padding:8px 3px;font-size:11.5px;line-height:1.2}.check-row{display:flex;align-items:flex-start;gap:9px;padding:9px 5px;border-top:1px solid var(--line);font-size:13px}.check-row:first-child{border-top:0}.check-row input{margin:1px 0 0;width:20px;height:20px;flex:0 0 20px;accent-color:#4f46e5}.check-val{font-weight:800;color:#4338ca;flex:0 0 auto;min-width:46px}.check-src{flex:1;line-height:1.5;word-break:break-word}.check-note{display:block;color:var(--muted);font-size:11px;margin-top:2px}.check-done .check-src{color:#94a3b8}.check-done .check-val{color:#94a3b8}.guide-lead{font-size:13px;color:var(--ink);line-height:1.7;margin:2px 2px 12px}.guide-sec .build-note{margin-top:6px}.guide-sec b{color:#4338ca}.build-table{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0 8px}.build-table td{border-top:1px solid var(--line);padding:6px 7px;vertical-align:top;line-height:1.4}.build-table tr:first-child td{border-top:0}.build-head td{color:var(--muted);font-weight:700;font-size:11px}.build-npc td{text-align:center;font-weight:800;background:#f1f5f9;color:#1e1b4b}.build-mlink{color:#4338ca;font-weight:700;cursor:pointer;border-bottom:1px dotted #4338ca}.build-note{font-size:12px;color:#475569;line-height:1.65;margin:0;padding:0 2px 4px}#buildsView .filter-row{margin-top:0}.monster-card{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px;cursor:pointer}.monster-card strong{display:block;font-size:15px}.monster-card small{display:block;color:var(--muted);font-size:12px;margin-top:5px}.monster-drops{display:flex;flex-wrap:wrap;gap:6px}
+
+.monster-drop-group{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:8px 0}.monster-drop-heading{background:#eef2ff;color:#4338ca;font-size:12px;font-weight:800;padding:7px 10px}.monster-drop-row{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;border-top:1px solid var(--line);font-size:12px;line-height:1.5}.monster-drop-row span{color:var(--muted);text-align:right}.monster-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.monster-stat{background:#f8fafc;border-radius:8px;padding:9px;text-align:center}.monster-stat small{display:block;color:var(--muted);font-size:10px}.monster-stat strong{display:block;margin-top:3px;font-size:15px}.monster-text-block{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 11px;margin-top:8px;font-size:12px;line-height:1.7;white-space:pre-wrap}.monster-text-block b{color:#4338ca}
+.monster-owned-check{appearance:none;width:20px;height:20px;flex:0 0 20px;margin:0 8px 0 0;border:2px solid #cbd5e1;border-radius:6px;background:#fff;cursor:pointer;position:relative}.monster-owned-check:checked{border-color:#4f46e5;background:#4f46e5}.monster-owned-check:checked::after{content:'✓';position:absolute;left:2px;top:-4px;color:#fff;font-size:16px;font-weight:800}
+.back-link{border:0;background:none;color:#4338ca;font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:0 0 10px}
+
+</style></head>
+<body>
+  <header class="app-header"><div class="header-inner"><div><p class="eyebrow">冒険者ギルド物語2</p><h1>レアアイテム検索</h1></div><span class="count-pill" id="resultCount">—</span></div></header>
+  <main class="container">
+    <section class="search-card" aria-label="検索条件">
+      <label class="search-box"><span aria-hidden="true">⌕</span><input id="query" type="search" placeholder="アイテム名・モンスター名で検索" autocomplete="off"><button id="clearQuery" class="clear-button" type="button" aria-label="検索語を消去">×</button></label>
+      <div class="filter-row"><select id="chapterFilter" aria-label="章で絞り込み"><option value="">すべての章</option></select><select id="difficultyFilter" aria-label="難易度で絞り込み"><option value="">すべての難易度</option><option>通常</option><option>魔性</option><option>宿った</option><option>伝説</option></select></div>
+      <div class="owned-tools"><select id="ownedFilter" aria-label="入手状態で絞り込み"><option value="all">入手状態：すべて</option><option value="unowned">未入手のみ</option><option value="owned">入手済みのみ</option></select><button id="exportOwned" type="button">チェックを書き出す</button><button id="importOwned" type="button">読み込む</button><input id="ownedFile" type="file" accept="application/json" hidden></div>
+    </section>
+    <div class="section-heading"><h2 id="listHeading">ダンジョン一覧</h2><button id="resetFilters" class="text-button" type="button">条件をリセット</button></div>
+    <section id="itemList" class="item-list" aria-live="polite"></section><p id="emptyState" class="empty-state" hidden>条件に一致するアイテムがありません。</p>
+  </main>
+  <dialog id="detailDialog"><div class="dialog-shell"><button id="closeDialog" class="dialog-close" type="button" aria-label="閉じる">×</button><div id="detailContent"></div></div></dialog>
+  
+<script>
+window.__META=/*@DATA:META@*/;
+window.RARE_ITEMS=/*@DATA:RARE_ITEMS@*/;
+window.RARE_MONSTERS=/*@DATA:RARE_MONSTERS@*/;
+window.PARTY_RECS=/*@DATA:PARTY_RECS@*/;
+
+/* 4章以降はwikiに重要度★表が無いため本文から抽出した暫定リスト。★表が追加されたらこの1行を削除してsqlite再取り込みするだけでよい。 */
+window.PARTY_RECS=window.PARTY_RECS.concat(/*@DATA:PARTY_RECS_PROSE@*/);const items=window.RARE_ITEMS,monsters=window.RARE_MONSTERS||[],$=id=>document.getElementById(id),query=$('query'),chapterFilter=$('chapterFilter'),difficultyFilter=$('difficultyFilter'),list=$('itemList'),empty=$('emptyState'),count=$('resultCount'),dialog=$('detailDialog');
+window.PARTY_BUILDS=/*@DATA:PARTY_BUILDS@*/;
+window.TREH_CHECK=/*@DATA:TREH_CHECK@*/;
+const byId=new Map(items.map(i=>[i.id,i])),monsterByName=new Map(monsters.map(m=>[m.name,m])),chapters=[...new Set(items.flatMap(i=>i.drops.map(d=>d.chapter)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ja',{numeric:true}));
+chapters.forEach(ch=>chapterFilter.insertAdjacentHTML('beforeend',`<option value="${esc(ch)}">${esc(ch)}</option>`));
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function drops(i){return i.drops.filter(d=>(!chapterFilter.value||d.chapter===chapterFilter.value)&&(!difficultyFilter.value||d.difficulty===difficultyFilter.value))}
+function render(){const q=query.value.trim().toLowerCase(),groups=new Map();items.forEach(i=>{const ds=drops(i);if(!ds.length)return;const hay=[i.name,...ds.flatMap(d=>[d.dungeon,d.monster,d.chapter])].join(' ').toLowerCase();if(q&&!hay.includes(q))return;ds.forEach(d=>{const key=d.dungeonOrder;if(!groups.has(key))groups.set(key,{order:key,name:d.dungeon,chapter:d.chapter,items:new Map()});if(!groups.get(key).items.has(i.id))groups.get(key).items.set(i.id,i)})});const gs=[...groups.values()].sort((a,b)=>a.order-b.order);count.textContent=`${gs.length}ヶ所`;empty.hidden=gs.length>0;list.innerHTML=gs.map(g=>`<section class="dungeon-section"><div class="dungeon-title"><span class="dungeon-chapter">${esc(g.chapter)}</span>${esc(g.name)}</div>${[...g.items.values()].map(i=>{const ds=drops(i).filter(d=>d.dungeonOrder===g.order),diffs=[...new Set(ds.map(d=>d.difficulty))];return `<button class="item-card" data-id="${i.id}"><span class="item-top"><span class="item-name">${i.marker?`<span class="marker">${esc(i.marker)}</span>`:''}${esc(i.name)}</span></span><span class="item-tags">${diffs.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</span><span class="chevron">›</span></button>`}).join('')}</section>`).join('');list.querySelectorAll('.item-card').forEach(c=>c.addEventListener('click',()=>detail(byId.get(Number(c.dataset.id))))) }
+function fmtEffect(raw){var str=String(raw||"").trim();if(!str)return "";var bi=str.indexOf("[");var flat=(bi<0?str:str.slice(0,bi)).trim();var rest=bi<0?"":str.slice(bi);var stats=[];if(flat){flat.split(/\s+/).forEach(function(tok){if(!tok)return;var m=tok.match(/^(.*?)([+\-]?\d[\d.]*%?)$/);if(m&&m[1])stats.push([m[1],m[2]]);else stats.push([tok,""]);});}var effs=[];if(rest){var re=/\[([^\]]*)\]\s*([^\[]*)/g,mm;while((mm=re.exec(rest))){var v=mm[1].replace(/\s+/g," ").trim().replace(/(\d) (?=\d)/g,"$1").replace(/ %/g,"%").replace(/ 倍/g,"倍");var l=mm[2].replace(/\s+/g," ").trim();if(v||l)effs.push([v,l]);}}var html="";if(stats.length){html+="<table class=\"stat-table\">"+stats.map(function(r){var v=r[1],c="";if(/^-/.test(v))c=" class=\"neg\"";else if(/^\+/.test(v))c=" class=\"pos\"";return "<tr><th>"+esc(r[0])+"</th><td"+c+">"+esc(v)+"</td></tr>";}).join("")+"</table>";}if(effs.length){html+="<ul class=\"eff-list\">"+effs.map(function(r){return "<li><span class=\"eff-val\">"+esc(r[0])+"</span><span class=\"eff-lab\">"+esc(r[1])+"</span></li>";}).join("")+"</ul>";}if(!html)html="<div class=\"effect\">"+esc(str)+"</div>";return html;}
+function detail(item){const ds=drops(item),info=item.details||[];const detailHtml=info.length?`<h3 class="detail-heading">性能・基本情報</h3>${info.map(x=>`<div class="detail-info"><div class="detail-label">${esc(x.section||x.category||'アイテム情報')}</div>${x.restrictions?`<div class="restriction">${esc(x.restrictions)}</div>`:''}${x.effect?fmtEffect(x.effect):''}${x.price?`<div class="price">価格：${esc(x.price)}</div>`:''}${x.note?`<div class="detail-note">${esc(x.note)}</div>`:''}</div>`).join('')}`:'';$('detailContent').innerHTML=`<div class="detail-title">${item.marker?`<span class="marker">${esc(item.marker)}</span>`:''}${esc(item.name)}</div>${detailHtml}<div class="detail-grid"><div class="detail-stat"><small>入手情報</small>${ds.length}件</div><div class="detail-stat"><small>ダンジョン</small>${new Set(ds.map(d=>d.dungeon)).size}ヶ所</div><div class="detail-stat"><small>難易度</small>${[...new Set(ds.map(d=>d.difficulty))].join('・')||'—'}</div></div><h3 class="detail-heading">入手場所・ドロップモンスター</h3>${ds.map(d=>`<div class="drop-row"><div class="drop-dungeon">${esc(d.dungeon)}<br><span class="tag">${esc(d.difficulty)}</span></div><div class="drop-info">罠難易度：${esc(d.trap)}<br>${d.monster?`<button class="monster-link" data-monster="${esc(d.monster)}" type="button">${esc(d.monster)}　›</button>`:'—'}</div></div>`).join('')}${item.url?`<a class="wiki-link" href="${esc(item.url)}" target="_blank" rel="noopener">Wikiでアイテム詳細を見る ↗</a>`:''}`;dialog.showModal();dialog.querySelectorAll('.monster-link').forEach(b=>b.addEventListener('click',()=>monsterDetail(monsterByName.get(b.dataset.monster))))}
+function monsterDetail(m){if(!m)return;const loc=m.locations||[];$('detailContent').innerHTML=`<div class="detail-title">${esc(m.name)}</div><div class="detail-grid"><div class="detail-stat"><small>出現場所</small>${loc.length}ヶ所</div><div class="detail-stat"><small>種族</small>${esc([...new Set(loc.map(x=>x.race).filter(Boolean))].join('・')||'—')}</div><div class="detail-stat"><small>ドロップ</small>${(m.drops||[]).length}件</div></div><h3 class="detail-heading">出現場所</h3>${loc.map(x=>`<div class="drop-row"><div class="drop-dungeon">${esc(x.chapter)}<br>${esc(x.dungeon||'特殊出現')}</div><div class="drop-info">${x.marker?esc(x.marker)+' 固定・特殊':'通常出現'}</div></div>`).join('')}${m.drops?.length?`<h3 class="detail-heading">ドロップアイテム</h3><div class="monster-drops">${m.drops.map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div>`:''}${m.url?`<a class="wiki-link" href="${esc(m.url)}" target="_blank" rel="noopener">Wikiでモンスター詳細を見る ↗</a>`:''}`}
+query.addEventListener('input',render);chapterFilter.addEventListener('change',render);difficultyFilter.addEventListener('change',render);$('clearQuery').addEventListener('click',()=>{query.value='';query.focus();render()});$('resetFilters').addEventListener('click',()=>{query.value='';chapterFilter.value='';difficultyFilter.value='';render()});$('closeDialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});render();
+
+window.monsterDetail = function(m) {
+  if (!m) return;
+  const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const p = m.profile || {}, loc = m.locations || [], drops = m.drops || [], groups = new Map();
+  drops.forEach(d => { const key = d.difficulty || 'その他'; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(d); });
+  const order = ['通常','魔性','宿った','伝説','その他'];
+  const dropHtml = [...groups.entries()].sort((a,b) => order.indexOf(a[0])-order.indexOf(b[0])).map(([difficulty, rows]) => `<div class="monster-drop-group"><div class="monster-drop-heading">${esc(difficulty)}</div>${rows.map(d => `<div class="monster-drop-row"><strong>${esc(d.item)}</strong><span>${esc(d.dungeon)}<br>罠難易度：${esc(d.trap)}</span></div>`).join('')}</div>`).join('');
+  const stats = [['HP',p.hp],['攻撃',p.attack],['命中',p.accuracy],['攻撃回数',p.attacks],['防御',p.defense],['回避',p.evasion],['魔力',p.magicPower],['魔防',p.magicDefense],['回復',p.recovery],['EXP',p.exp],['GP',p.gp]].filter(x=>x[1]!==null&&x[1]!==undefined&&x[1]!=='');
+  const profileHtml = p ? `<h3 class="detail-heading">モンスタースペック</h3><div class="monster-stat-grid">${stats.map(x=>`<div class="monster-stat"><small>${x[0]}</small><strong>${esc(x[1])}</strong></div>`).join('')}</div>${p.jobLevel?`<div class="monster-text-block"><b>職業LV</b><br>${esc(p.jobLevel)}</div>`:''}${p.specialSkills?`<div class="monster-text-block"><b>特殊スキル</b><br>${esc(p.specialSkills)}</div>`:''}${p.spells?`<div class="monster-text-block"><b>呪文</b><br>${esc(p.spells)}</div>`:''}` : '';
+  document.getElementById('detailContent').innerHTML = `<div class="detail-title">${esc(m.name)}</div>${profileHtml}<div class="detail-grid"><div class="detail-stat"><small>出現場所</small>${loc.length}ヶ所</div><div class="detail-stat"><small>種族</small>${esc(p.race || [...new Set(loc.map(x=>x.race).filter(Boolean))].join('・') || '—')}</div><div class="detail-stat"><small>ドロップ</small>${drops.length}件</div></div><h3 class="detail-heading">出現場所</h3>${loc.map(x=>`<div class="drop-row"><div class="drop-dungeon">${esc(x.chapter)}<br>${esc(x.dungeon||'特殊出現')}</div><div class="drop-info">${x.marker?esc(x.marker)+' 固定・特殊':'通常出現'}</div></div>`).join('')}<h3 class="detail-heading">ドロップアイテム（難易度別）</h3>${dropHtml || '<p class="detail-note">ドロップ情報なし</p>'}${m.url?`<a class="wiki-link" href="${esc(m.url)}" target="_blank" rel="noopener">Wikiでモンスター詳細を見る ↗</a>`:''}`;
+};
+
+(() => {
+  const KEY='guildmono2-owned-items-v1',filter=document.getElementById('ownedFilter');let owned=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
+  const save=()=>localStorage.setItem(KEY,JSON.stringify([...owned]));
+  const apply=()=>{const mode=filter.value;document.querySelectorAll('.item-card').forEach(card=>{const id=String(card.dataset.id),show=mode==='all'||(mode==='owned'&&owned.has(id))||(mode==='unowned'&&!owned.has(id));card.hidden=!show;const cb=card.querySelector('.owned-check');if(cb)cb.checked=owned.has(id);card.classList.toggle('is-owned',owned.has(id))});document.querySelectorAll('.dungeon-section').forEach(s=>{s.hidden=!s.querySelector('.item-card:not([hidden])')})};
+  const decorate=()=>{document.querySelectorAll('.item-card:not([data-owned-ready])').forEach(card=>{const id=String(card.dataset.id);card.dataset.ownedReady='1';const cb=document.createElement('input');cb.type='checkbox';cb.className='owned-check';cb.setAttribute('aria-label','入手済みにする');cb.addEventListener('click',e=>e.stopPropagation());cb.addEventListener('change',()=>{cb.checked?owned.add(id):owned.delete(id);save();apply()});card.prepend(cb)});apply()};
+  window.isOwnedItem=id=>owned.has(String(id));window.toggleOwnedItem=(id,checked)=>{checked?owned.add(String(id)):owned.delete(String(id));save();apply();window.refreshMonsterOwned?.()};window.refreshOwned=decorate;
+  filter.addEventListener('change',decorate);document.getElementById('exportOwned').addEventListener('click',()=>{const blob=new Blob([JSON.stringify([...owned],null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='guildmono2-owned-items.json';a.click();URL.revokeObjectURL(a.href)});document.getElementById('importOwned').addEventListener('click',()=>document.getElementById('ownedFile').click());document.getElementById('ownedFile').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{owned=new Set(JSON.parse(reader.result));save();decorate()}catch{alert('チェックデータを読み込めませんでした')}};reader.readAsText(file)});document.getElementById('resetFilters').addEventListener('click',()=>{filter.value='all';setTimeout(decorate,0)});
+  new MutationObserver(decorate).observe(document.getElementById('itemList'),{childList:true,subtree:true});decorate();
+})();
+
+(() => {
+  const decorate = () => document.querySelectorAll('.monster-drop-row').forEach(row => {
+    const name = row.querySelector('strong')?.textContent.trim();
+    const item = (window.RARE_ITEMS || []).find(x => x.name === name);
+    if (!item) return;
+    row.dataset.ownedReady = '1';
+    let check = row.querySelector('.monster-owned-check');
+    if (!check) { check = document.createElement('input'); check.type = 'checkbox'; check.className = 'monster-owned-check'; check.setAttribute('aria-label', '入手済みにする'); row.prepend(check); }
+    check.checked = window.isOwnedItem?.(item.id) || false;
+    if (check.dataset.bound) return;
+    check.dataset.bound = '1';
+    check.addEventListener('click', e => e.stopPropagation()); check.addEventListener('change', () => window.toggleOwnedItem(item.id, check.checked));
+  });
+  window.refreshMonsterOwned = decorate;
+  new MutationObserver(decorate).observe(document.getElementById('detailContent'), {childList:true,subtree:true}); decorate();
+})();
+
+(() => {
+  let currentItemId=null;
+  document.addEventListener('click',e=>{const card=e.target.closest('.item-card');if(card)currentItemId=Number(card.dataset.id)},true);
+  window.backToItem=()=>{const item=(window.RARE_ITEMS||[]).find(x=>x.id===currentItemId);if(item&&window.detail)window.detail(item);else document.getElementById('detailDialog').close()};
+  const addBack=()=>{const content=document.getElementById('detailContent');if(content.querySelector('.monster-drop-group')&&!content.querySelector('.back-link')){const b=document.createElement('button');b.className='back-link';b.type='button';b.textContent='← アイテム詳細に戻る';b.onclick=window.backToItem;content.prepend(b)}};
+  new MutationObserver(addBack).observe(document.getElementById('detailContent'),{childList:true});
+})();
+
+(() => {
+  const KEY = 'guildmono2-dungeon-open-v1';
+  let open = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
+  const save = () => localStorage.setItem(KEY, JSON.stringify([...open]));
+  const decorate = () => document.querySelectorAll('.dungeon-section:not([data-collapse-ready])').forEach(section => {
+    const title = section.querySelector('.dungeon-title');
+    if (!title) return;
+    const key = `${title.textContent.trim()}`;
+    section.dataset.collapseReady = '1';
+    section.classList.toggle('is-collapsed', !open.has(key));
+    title.setAttribute('role', 'button'); title.setAttribute('tabindex', '0');
+    title.setAttribute('aria-expanded', String(open.has(key)));
+    const toggle = () => {
+      const willOpen = section.classList.toggle('is-collapsed') === false;
+      title.setAttribute('aria-expanded', String(willOpen));
+      willOpen ? open.add(key) : open.delete(key); save();
+    };
+    title.addEventListener('click', toggle);
+    title.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+  });
+  new MutationObserver(decorate).observe(document.getElementById('itemList'), {childList:true,subtree:true});
+  decorate();
+})();
+
+
+(() => {
+  const main = document.querySelector('main.container');
+  if (!main || !Array.isArray(window.PARTY_RECS)) return;
+  const recs = window.PARTY_RECS, items = window.RARE_ITEMS || [];
+  const pById = new Map(items.map(i => [i.id, i]));
+  const searchCard = main.querySelector('.search-card');
+  const secHeading = main.querySelector('.section-heading');
+  const itemList = document.getElementById('itemList');
+  const emptyState = document.getElementById('emptyState');
+  const pill = document.getElementById('resultCount');
+  const tabs = document.createElement('div');
+  tabs.className = 'mode-tabs';
+  tabs.innerHTML = '<button type="button" class="mode-tab active" data-view="dungeon">\u30c0\u30f3\u30b8\u30e7\u30f3</button><button type="button" class="mode-tab" data-view="party">\u30d1\u30fc\u30c6\u30a3\u63a8\u5968</button>';
+  main.insertBefore(tabs, main.firstElementChild);
+  const view = document.createElement('section');
+  view.id = 'partyView';
+  view.hidden = true;
+  const secs = [...new Set(recs.map(r => r.sec))];
+  const difs = [...new Set(recs.map(r => r.dif))].filter(Boolean);
+  view.innerHTML =
+    '<div class="search-card" style="margin-bottom:12px"><div class="filter-row">' +
+    '<select id="partySec" aria-label="\u7ae0\u3067\u7d5e\u308a\u8fbc\u307f"><option value="">\u3059\u3079\u3066\u306e\u7ae0</option>' + secs.map(s => '<option>' + esc(s) + '</option>').join('') + '</select>' +
+    '<select id="partyDif" aria-label="\u96e3\u6613\u5ea6\u3067\u7d5e\u308a\u8fbc\u307f"><option value="">\u3059\u3079\u3066\u306e\u96e3\u6613\u5ea6</option>' + difs.map(s => '<option>' + esc(s) + '</option>').join('') + '</select>' +
+    '</div></div>' +
+    '<p class="party-note">\u653b\u7565\u4e2d\u306b\u512a\u5148\u3057\u3066\u78ba\u4fdd\u3057\u305f\u3044\u30ec\u30a2\u306e\u76ee\u5b89\u3002\u2605\u2605\u2605\u307b\u3069\u91cd\u8981\u3002\u30bf\u30c3\u30d7\u3067\u8a73\u7d30\u3002</p>' +
+    '<div id="partyList"></div>' +
+    '<p id="partyEmpty" class="empty-state" hidden>\u8a72\u5f53\u3059\u308b\u63a8\u5968\u30a2\u30a4\u30c6\u30e0\u304c\u3042\u308a\u307e\u305b\u3093\u3002</p>';
+  main.appendChild(view);
+  const partySec = view.querySelector('#partySec');
+  const partyDif = view.querySelector('#partyDif');
+  const partyList = view.querySelector('#partyList');
+  const partyEmpty = view.querySelector('#partyEmpty');
+  const rank = { '\u2605\u2605\u2605': 0, '\u2605\u2605': 1, '\u2605': 2 };
+  const pOpen = new Set();
+  function renderParty() {
+    const sc = partySec.value, dc = partyDif.value;
+    const f = recs.filter(r => (!sc || r.sec === sc) && (!dc || r.dif === dc));
+    pill.textContent = f.length + '\u4ef6';
+    const groups = [], gmap = new Map();
+    f.forEach(r => {
+      const k = r.sec + '\u0000' + r.area;
+      let g = gmap.get(k);
+      if (!g) { g = { sec: r.sec, area: r.area, rows: [] }; gmap.set(k, g); groups.push(g); }
+      g.rows.push(r);
+    });
+    partyList.innerHTML = groups.map(g => {
+      const rows = g.rows.slice().sort((a, b) => (rank[a.imp] ?? 9) - (rank[b.imp] ?? 9) || (a.dif < b.dif ? -1 : a.dif > b.dif ? 1 : 0));
+      const collapsed = pOpen.has(g.sec + '\u0000' + g.area) ? '' : ' is-collapsed';
+      return '<section class="dungeon-section' + collapsed + '"><div class="dungeon-title" role="button" tabindex="0"><span class="dungeon-chapter">' + esc(g.sec) + '</span>' + esc(g.area) + '</div>' +
+        rows.map(r => {
+          const it = pById.get(r.id);
+          const cls = r.imp === '\u2605\u2605\u2605' ? 'imp-3' : r.imp === '\u2605\u2605' ? 'imp-2' : 'imp-1';
+          const badge = r.imp ? '<span class="imp-badge ' + cls + '">' + esc(r.imp) + '</span>' : '';
+          const tag = r.dif ? '<span class="item-tags"><span class="tag">' + esc(r.dif) + '</span></span>' : '';
+          return '<button class="item-card" type="button" data-party-id="' + r.id + '">' + badge + '<span class="item-top"><span class="item-name">' + esc(it ? it.name : '\u4e0d\u660e') + '</span></span>' + tag + '<span class="chevron">\u203a</span></button>';
+        }).join('') +
+        '</section>';
+    }).join('');
+    partyEmpty.hidden = f.length > 0;
+    partyList.querySelectorAll('.dungeon-section').forEach((section, idx) => {
+      const g = groups[idx];
+      if (!g) return;
+      const title = section.querySelector('.dungeon-title');
+      const key = g.sec + '\u0000' + g.area;
+      const toggle = () => {
+        const nowOpen = section.classList.toggle('is-collapsed') === false;
+        nowOpen ? pOpen.add(key) : pOpen.delete(key);
+        title.setAttribute('aria-expanded', String(nowOpen));
+      };
+      title.setAttribute('aria-expanded', String(!section.classList.contains('is-collapsed')));
+      title.addEventListener('click', toggle);
+      title.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
+  }
+  partyList.addEventListener('click', e => {
+    const b = e.target.closest('[data-party-id]');
+    if (!b) return;
+    const it = pById.get(Number(b.dataset.partyId));
+    if (it && typeof detail === 'function') detail(it);
+  });
+  const mainViews = window.__mainViews || (window.__mainViews = {});
+  function setView(v) {
+    tabs.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
+    const dungeon = v === 'dungeon';
+    if (searchCard) searchCard.hidden = !dungeon;
+    if (secHeading) secHeading.hidden = !dungeon;
+    if (itemList) itemList.hidden = !dungeon;
+    view.hidden = v !== 'party';
+    Object.keys(mainViews).forEach(id => { if (mainViews[id].el) mainViews[id].el.hidden = v !== id; });
+    if (v === 'party') { if (emptyState) emptyState.hidden = true; renderParty(); }
+    else if (dungeon) { if (typeof render === 'function') render(); }
+    else { if (emptyState) emptyState.hidden = true; if (mainViews[v] && mainViews[v].render) mainViews[v].render(); }
+  }
+  window.__setMainView = setView;
+  tabs.addEventListener('click', e => { const b = e.target.closest('.mode-tab'); if (b) setView(b.dataset.view); });
+  partySec.addEventListener('change', renderParty);
+  partyDif.addEventListener('change', renderParty);
+})();
+
+
+(() => {
+  if (!Array.isArray(window.PARTY_BUILDS) || !window.__setMainView) return;
+  const builds = window.PARTY_BUILDS;
+  const main = document.querySelector('main.container');
+  const tabs = main.querySelector('.mode-tabs');
+  if (!main || !tabs) return;
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'mode-tab'; btn.dataset.view = 'builds'; btn.textContent = '\u7de8\u6210\u96c6';
+  tabs.appendChild(btn);
+  const view = document.createElement('section');
+  view.id = 'buildsView'; view.hidden = true;
+  const cats = [...new Set(builds.map(b => b.cat))];
+  view.innerHTML =
+    '<div class="search-card" style="margin-bottom:12px"><div class="filter-row">' +
+    '<select id="buildCat"><option value="">\u3059\u3079\u3066\u306e\u7a2e\u985e</option>' + cats.map(c => '<option>' + esc(c) + '</option>').join('') + '</select>' +
+    '<select id="buildProg"><option value="">\u3059\u3079\u3066\u306e\u9032\u884c\u5ea6</option></select>' +
+    '</div></div>' +
+    '<p class="party-note">wiki\u300c\u304a\u3059\u3059\u3081\u30d1\u30fc\u30c6\u30a3\u7de8\u6210\u300d\u304b\u3089\u62bd\u51fa\u3057\u305f\u7de8\u6210\u8868\u3002\u898b\u51fa\u3057\u30bf\u30c3\u30d7\u3067\u958b\u9589\u3002\u9752\u5b57\u306f\u30e2\u30f3\u30b9\u30bf\u30fc\u8a73\u7d30\u3078\u3002</p>' +
+    '<div id="buildsList"></div>' +
+    '<p id="buildsEmpty" class="empty-state" hidden>\u8a72\u5f53\u3059\u308b\u7de8\u6210\u304c\u3042\u308a\u307e\u305b\u3093\u3002</p>';
+  main.appendChild(view);
+  const catSel = view.querySelector('#buildCat');
+  const progSel = view.querySelector('#buildProg');
+  const listEl = view.querySelector('#buildsList');
+  const emptyEl = view.querySelector('#buildsEmpty');
+  const bOpen = new Set();
+  const HEAD = '\u7a2e\u65cf', H2 = '\u8077\u696d', H3 = '\u524d\u8077', H4 = '\u500b\u6027';
+
+  function syncProg() {
+    const c = catSel.value;
+    const progs = [...new Set(builds.filter(b => !c || b.cat === c).map(b => b.prog))];
+    progSel.innerHTML = '<option value="">\u3059\u3079\u3066\u306e\u9032\u884c\u5ea6</option>' + progs.map(p => '<option>' + esc(p) + '</option>').join('');
+  }
+  function memberRows(ms) {
+    return ms.map(x => {
+      if (x.name) return '<tr class="build-npc"><td colspan="4">' + esc(x.name) + '</td></tr>';
+      const RACES = ['\u4eba\u9593\u7537','\u4eba\u9593\u5973','\u30d4\u30b0\u30df\u30fc\u30c1\u30e3\u30e0','\u30ce\u30fc\u30e0','\u30c9\u30ef\u30fc\u30d5','\u30c0\u30fc\u30af\u30a8\u30eb\u30d5','\u5438\u8840\u9b3c','\u30a8\u30eb\u30d5','\u30b5\u30a4\u30ad\u30c3\u30af','\u30ef\u30fc\u30ad\u30e3\u30c3\u30c8','\u30c9\u30e9\u30b4\u30cb\u30e5\u30fc\u30c8','\u30a2\u30de\u30be\u30cd\u30b9','\u9b54\u9020\u751f\u7269','\u30a2\u30f3\u30c7\u30c3\u30c9\u30de\u30f3','\u5de8\u4eba','\u5929\u72d7','\u9b3c','\u30b5\u30a4\u30dc\u30fc\u30b0'];
+      const isMon = typeof monsterByName !== 'undefined' && monsterByName.has(x.race) && RACES.indexOf(x.race) < 0;
+      const rc = isMon ? '<span class="build-mlink" data-mon="' + esc(x.race) + '">' + esc(x.race) + '</span>' : esc(x.race || '\u2014');
+      return '<tr><td>' + rc + '</td><td>' + esc(x.job || '\u2014') + '</td><td>' + esc(x.prejob || '\u2014') + '</td><td>' + esc(x.trait || '\u2014') + '</td></tr>';
+    }).join('');
+  }
+  function renderBuilds() {
+    const c = catSel.value, p = progSel.value;
+    const f = builds.filter(b => (!c || b.cat === c) && (!p || b.prog === p));
+    const pill = document.getElementById('resultCount');
+    if (pill) pill.textContent = f.length + '\u4ef6';
+    emptyEl.hidden = f.length > 0;
+    listEl.innerHTML = f.map(b => {
+      const key = b.cat + '\u0000' + b.prog + '\u0000' + b.name;
+      const collapsed = bOpen.has(key) ? '' : ' is-collapsed';
+      return '<section class="dungeon-section' + collapsed + '"><div class="dungeon-title" role="button" tabindex="0"><span class="dungeon-chapter">' + esc(b.cat) + '\u30fb' + esc(b.prog) + '</span>' + esc(b.name) + '</div>' +
+        '<table class="build-table"><tr class="build-head"><td>' + HEAD + '</td><td>' + H2 + '</td><td>' + H3 + '</td><td>' + H4 + '</td></tr>' + memberRows(b.members) + '</table>' +
+        (b.note ? '<p class="build-note">' + esc(b.note) + '</p>' : '') +
+        '</section>';
+    }).join('');
+    listEl.querySelectorAll('.dungeon-section').forEach((sec, i) => {
+      const b = f[i]; if (!b) return;
+      const key = b.cat + '\u0000' + b.prog + '\u0000' + b.name;
+      const title = sec.querySelector('.dungeon-title');
+      const toggle = () => {
+        const open = sec.classList.toggle('is-collapsed') === false;
+        open ? bOpen.add(key) : bOpen.delete(key);
+        title.setAttribute('aria-expanded', String(open));
+      };
+      title.setAttribute('aria-expanded', String(!sec.classList.contains('is-collapsed')));
+      title.addEventListener('click', toggle);
+      title.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
+  }
+  listEl.addEventListener('click', e => {
+    const sp = e.target.closest('.build-mlink'); if (!sp) return;
+    const m = typeof monsterByName !== 'undefined' && monsterByName.get(sp.dataset.mon);
+    if (m && window.monsterDetail) { window.monsterDetail(m); const d = document.getElementById('detailDialog'); if (d && !d.open) d.showModal(); }
+  });
+  catSel.addEventListener('change', () => { syncProg(); renderBuilds(); });
+  progSel.addEventListener('change', renderBuilds);
+  (window.__mainViews || (window.__mainViews = {})).builds = { el: view, render: renderBuilds };
+  syncProg();
+})();
+
+
+(() => {
+  if (!window.__setMainView) return;
+  const main = document.querySelector('main.container');
+  const tabs = main && main.querySelector('.mode-tabs');
+  if (!main || !tabs) return;
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'mode-tab'; btn.dataset.view = 'guide';
+  btn.textContent = '仕組み';
+  tabs.appendChild(btn);
+
+  const SECS = [
+    {t:'① アイテムは4種類。ルールが全部ちがう',
+     h:'<p class="build-note">戦闘後のドロップは<b>別々に抽選される4グループ</b>に分かれる。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>種類</td><td>中身</td><td>サイト収録</td></tr>'+
+       '<tr><td>レアアイテム</td><td>図鑑に「ドロップ」と書いてあるやつ</td><td>○</td></tr>'+
+       '<tr><td>ノーマル</td><td>図鑑外の量産装備</td><td>—</td></tr>'+
+       '<tr><td>グッド</td><td>図鑑外・別枠の消耗品・杖・魔書</td><td>—</td></tr>'+
+       '<tr><td>宝石類</td><td>宝石＋種族専用の最強装備</td><td>—</td></tr></table>'+
+       '<p class="build-note">1回の戦闘で<b>同名アイテムは1個まで</b>（称号違いも同名扱い）。別アイテムなら同時に何個でも落ちる。レアは1個ずつ独立抽選。</p>'},
+
+    {t:'② 「落ちるか」は 運 × レア倍率',
+     h:'<p class="build-note">運が高いほど・レア倍率が高いほど落ちやすい。<b>称号倍率は落ちやすさには無関係</b>（付く称号の質にだけ効く）。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>運値</td><td>運乱数の範囲</td></tr>'+
+       '<tr><td>35</td><td>37.00 ～ 99.99</td></tr><tr><td>30</td><td>30.00 ～ 99.99</td></tr>'+
+       '<tr><td>25</td><td>22.00 ～ 99.99</td></tr><tr><td>20</td><td>15.00 ～ 99.99</td></tr>'+
+       '<tr><td>15</td><td>7.00 ～ 99.99</td></tr><tr><td>10</td><td>0.00 ～ 99.99</td></tr></table>'+
+       '<p class="build-note">0～99.99のサイコロを振り、しきい値を上回れば当たり。運が高いとサイコロの下限が上がる。<br>・レア/グッド：しきい値 = 100 − レア倍率×0.1<br>・ノーマル：100 − レア倍率×10<br>倍率1倍でレアは約0.1%、倍率10倍でも約1%。地道。</p>'},
+
+    {t:'③ 宝石だけルールが特殊',
+     h:'<p class="build-note">宝石を落とすかは<b>モンスターごとに固定</b>。ランクはそのモンスターの<b>無称号レベル</b>で決まる（恐ろしいでも無称号基準）。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>ランク</td><td>宝石</td><td>必要無称号LV</td></tr>'+
+       '<tr><td>A</td><td>最高級</td><td>500</td></tr><tr><td>B</td><td>高級</td><td>300</td></tr>'+
+       '<tr><td>C</td><td>中級</td><td>200</td></tr><tr><td>D</td><td>低級</td><td>150</td></tr>'+
+       '<tr><td>E</td><td>最下級</td><td>100</td></tr><tr><td>F</td><td>最下級（一部）</td><td>30</td></tr></table>'+
+       '<p class="build-note">・<b>レア倍率は10倍で頭打ち</b>。宝石狙いならプレミアム外でも効率同じ。<br>・運は効く（レア10倍・運35で約1.58%、運10で約0.99%）。<br>・数が多いランクほど「どれか」が出やすい：最下級(24種)>低級(15種)>中/高/最高級(各6種)。<br>・無称号LVが200超の敵は、宝石当たり時 1.785% で種族専用最強装備（17種）に化ける。<br>・Lv150以上で宝石を落とさないのはキングドラゴン・フロストジャイアント・要塞竜の3体のみ。</p>'},
+
+    {t:'④ 称号が付くかも別抽選',
+     h:'<p class="build-note"><b>称号付与率</b>が高いほど付く。アイテムごとの「付きやすさ（固有ポイント）」もあり、手裏剣・マスターソード・神秘の剣などは付きやすい。ノーマルは特に付きやすい。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>称号</td><td>ベース出現率</td></tr>'+
+       '<tr><td>最低の</td><td>28.6%</td></tr><tr><td>臭い</td><td>38.0%</td></tr>'+
+       '<tr><td>名工の</td><td>28.6%</td></tr><tr><td>魔性の</td><td>3.7%</td></tr>'+
+       '<tr><td>宿った</td><td>0.9%</td></tr><tr><td>伝説の</td><td>0.23%</td></tr>'+
+       '<tr><td>恐ろしい</td><td>0.06%</td></tr><tr><td>壊れた</td><td>0.014%</td></tr></table>'+
+       '<p class="build-note">まずベース確率で仮決め → <b>敵モンスターの称号が高いほど「昇格くじ」を何回も引き</b>、一番良いものを採用。例）敵が「伝説の」なら判定7回で名工64.7%/魔性21.3%/宿った6.1%…と大幅に上振れ。</p>'},
+
+    {t:'⑤ 超レア（本当の当たり）',
+     h:'<p class="build-note">称号が付いたアイテムだけ、さらに「超レア称号」の抽選を受ける。<b>超レア乱数 &lt; 超レアレート</b> なら確定。</p>'+
+       '<p class="build-note">超レア乱数の上限は <b>2,840,900</b>（その日／その出撃で最初の超レアが出るまで）→ 以降 22,727,200 に跳ね上がる（＝2個目以降は激減）。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>ノーマル称号</td><td>レア(8倍)</td><td>宝石(24倍)</td></tr>'+
+       '<tr><td>名工の</td><td>400</td><td>1,200</td></tr><tr><td>魔性の</td><td>4,000</td><td>12,000</td></tr>'+
+       '<tr><td>宿った</td><td>20,000</td><td>60,000</td></tr><tr><td>伝説の</td><td>48,000</td><td>144,000</td></tr>'+
+       '<tr><td>恐ろしい</td><td>105,600</td><td>316,800</td></tr><tr><td>壊れた</td><td>211,200</td><td>633,600</td></tr></table>'+
+       '<p class="build-note">・超レアレート = ノーマル称号 × 種類倍率（ノーマル1/グッド2/レア8/宝石24）。<br>・<b>超レアモンスター</b>相手は優遇：レートがノーマル×50/グッド×50/レア×20（宝石は優遇なし）。付く超レア称号は敵と同じ。<br>・超レア確定時は12%でノーマル称号が無称号に戻る。</p>'},
+
+    {t:'⑥ 宝箱の鍵開け（罠解除どれだけ要る？）',
+     h:'<p class="build-note">宝箱の難易度 = <b>アイテム基本値（価格・称号）＋推奨Lv×5＋ドロップ階層×2</b>。1戦で複数落ちたら一番難しい宝箱が適用。宝石は同価格の装備より高め。</p>'+
+       '<table class="build-table"><tr class="build-head"><td>開錠率</td><td>必要な罠解除能力</td></tr>'+
+       '<tr><td>95%</td><td>難易度 + 95</td></tr><tr><td>100%</td><td>難易度 × 2 + 95</td></tr></table>'+
+       '<p class="build-note">推奨Lvが一番高いのは「竜と悪魔の戦場」、次が「大蛇の洞窟」。このゲームで一番硬い宝箱は<b>ヤマタノオロチから最高級宝石</b>（無称号2091／壊れた2789）。壊れた最高級宝石を100%開けるには罠解除 <b>約5,700</b> が目安。</p>'}
+  ];
+
+  const view = document.createElement('section');
+  view.id = 'guideView'; view.hidden = true;
+  const M = window.__META || {};
+  const metaLine = M.wiki
+    ? '<p class="guide-lead" style="opacity:.7;font-size:11px">データ出典: wikiwiki「冒険者ギルド物語2」 取得 ' + esc(M.wiki) + (M.gameVer ? ' / ' + esc(M.gameVer) : '') + ' ・ ビルド ' + esc(M.built || '') + '</p>'
+    : '';
+  view.innerHTML =
+    '<p class="guide-lead">wiki「ドロップアイテム」の仕組みを要約。見出しタップで開閉。</p>' +
+    '<div id="guideList"></div>' + metaLine;
+  main.appendChild(view);
+  const list = view.querySelector('#guideList');
+  const gOpen = new Set();
+
+  function renderGuide() {
+    const pill = document.getElementById('resultCount');
+    if (pill) pill.textContent = SECS.length + '項目';
+    list.innerHTML = SECS.map((s, i) => {
+      const collapsed = gOpen.has(i) ? '' : ' is-collapsed';
+      return '<section class="dungeon-section guide-sec' + collapsed + '"><div class="dungeon-title" role="button" tabindex="0">' + s.t + '</div>' + s.h + '</section>';
+    }).join('');
+    list.querySelectorAll('.dungeon-section').forEach((sec, i) => {
+      const title = sec.querySelector('.dungeon-title');
+      const toggle = () => {
+        const open = sec.classList.toggle('is-collapsed') === false;
+        open ? gOpen.add(i) : gOpen.delete(i);
+        title.setAttribute('aria-expanded', String(open));
+      };
+      title.setAttribute('aria-expanded', String(!sec.classList.contains('is-collapsed')));
+      title.addEventListener('click', toggle);
+      title.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
+  }
+  (window.__mainViews || (window.__mainViews = {})).guide = { el: view, render: renderGuide };
+})();
+
+
+(() => {
+  if (!window.__setMainView || !Array.isArray(window.TREH_CHECK)) return;
+  const main = document.querySelector('main.container');
+  const tabs = main && main.querySelector('.mode-tabs');
+  if (!main || !tabs) return;
+  const KEY = 'guildmono2-treh-check';
+  let done = new Set();
+  try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch (e) {} };
+
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'mode-tab'; btn.dataset.view = 'check';
+  btn.textContent = 'トレハン確認';
+  tabs.appendChild(btn);
+
+  const view = document.createElement('section');
+  view.id = 'checkView'; view.hidden = true;
+  view.innerHTML =
+    '<p class="guide-lead">wiki「トレハン・金策パーティー」のトレハン効果一覧。今のギルドで<b>用意できる手段</b>にチェック。端末内に保存されます。</p>' +
+    '<div id="checkList"></div>';
+  main.appendChild(view);
+  const listEl = view.querySelector('#checkList');
+  const cOpen = new Set(window.TREH_CHECK.map((_, i) => i));
+
+  function key(ci, ri) { return ci + ':' + ri; }
+  function renderCheck() {
+    let total = 0, got = 0;
+    window.TREH_CHECK.forEach(c => c.rows.forEach(() => total++));
+    done.forEach(() => got++);
+    const pill = document.getElementById('resultCount');
+    if (pill) pill.textContent = got + '/' + total;
+    listEl.innerHTML = window.TREH_CHECK.map((c, ci) => {
+      const n = c.rows.length;
+      const g = c.rows.filter((_, ri) => done.has(key(ci, ri))).length;
+      const collapsed = cOpen.has(ci) ? '' : ' is-collapsed';
+      const rows = c.rows.map((r, ri) => {
+        const k = key(ci, ri), on = done.has(k);
+        return '<label class="check-row' + (on ? ' check-done' : '') + '">' +
+          '<input type="checkbox" data-k="' + k + '"' + (on ? ' checked' : '') + '>' +
+          '<span class="check-val">' + esc(r.val) + '</span>' +
+          '<span class="check-src">' + esc(r.src) + (r.note ? '<span class="check-note">' + esc(r.note) + '</span>' : '') + '</span>' +
+          '</label>';
+      }).join('');
+      return '<section class="dungeon-section' + collapsed + '"><div class="dungeon-title" role="button" tabindex="0"><span class="dungeon-chapter">' + g + ' / ' + n + '</span>' + esc(c.cat) + '</div>' + rows + '</section>';
+    }).join('');
+    listEl.querySelectorAll('.dungeon-section').forEach((sec, ci) => {
+      const title = sec.querySelector('.dungeon-title');
+      const toggle = () => {
+        const open = sec.classList.toggle('is-collapsed') === false;
+        open ? cOpen.add(ci) : cOpen.delete(ci);
+        title.setAttribute('aria-expanded', String(open));
+      };
+      title.setAttribute('aria-expanded', String(!sec.classList.contains('is-collapsed')));
+      title.addEventListener('click', toggle);
+      title.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
+  }
+  listEl.addEventListener('change', e => {
+    const cb = e.target.closest('input[data-k]'); if (!cb) return;
+    cb.checked ? done.add(cb.dataset.k) : done.delete(cb.dataset.k);
+    save();
+    const row = cb.closest('.check-row'); if (row) row.classList.toggle('check-done', cb.checked);
+    const pill = document.getElementById('resultCount');
+    let total = 0; window.TREH_CHECK.forEach(c => c.rows.forEach(() => total++));
+    if (pill) pill.textContent = done.size + '/' + total;
+    const sec = cb.closest('.dungeon-section');
+    if (sec) {
+      const ci = [...listEl.children].indexOf(sec);
+      const c = window.TREH_CHECK[ci];
+      const g = c.rows.filter((_, ri) => done.has(key(ci, ri))).length;
+      const chap = sec.querySelector('.dungeon-chapter');
+      if (chap) chap.textContent = g + ' / ' + c.rows.length;
+    }
+  });
+  (window.__mainViews || (window.__mainViews = {})).check = { el: view, render: renderCheck };
+})();
+
+</script></body></html>

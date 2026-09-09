@@ -1,0 +1,4 @@
+build/_gen/
+build/_baseline/
+*.pyc
+__pycache__/

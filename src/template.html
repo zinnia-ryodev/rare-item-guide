@@ -512,7 +512,7 @@ window.monsterDetail = function(m) {
     '<button id="monClear" class="clear-button" type="button" aria-label="消去">×</button></label>' +
     '<div class="filter-row" style="margin-top:9px">' +
     '<select id="monRace"><option value="">すべての種族</option>' + races.map(r => '<option>' + esc(r) + '</option>').join('') + '</select>' +
-    '<select id="monSort"><option value="name">名前順</option><option value="drops">ドロップ数順</option><option value="hp">HP順</option></select>' +
+    '<select id="monSort"><option value="chapter">章順</option><option value="name">名前順</option><option value="drops">ドロップ数順</option><option value="hp">HP順</option></select>' +
     '</div></div>' +
     '<div id="monList" class="mon-list item-list"></div>' +
     '<p id="monEmpty" class="empty-state" hidden>該当するモンスターがいません。</p>';
@@ -531,6 +531,10 @@ window.monsterDetail = function(m) {
     return fromLoc.join('・') || '—';
   };
   const numHp = m => { const n = parseInt((m.profile || {}).hp, 10); return isNaN(n) ? -1 : n; };
+  const CH_ORDER = ['エクストラ', '一章', '二章', '三章', '四章', '五章', '六章', '七章', '神々の宴'];
+  const chIdx = c => { const i = CH_ORDER.indexOf(c); return i < 0 ? 90 : i; };
+  const firstCh = m => { const cs = (m.locations || []).map(l => chIdx(l.chapter)); return cs.length ? Math.min.apply(null, cs) : 99; };
+  const chLabel = m => { const r = firstCh(m); return r < 99 ? (CH_ORDER[r] || '') : ''; };
 
   function render() {
     const term = q.value.trim().toLowerCase();
@@ -546,7 +550,8 @@ window.monsterDetail = function(m) {
     const s = sortSel.value;
     if (s === 'drops') f.sort((a, b) => (b.drops || []).length - (a.drops || []).length || a.name.localeCompare(b.name, 'ja'));
     else if (s === 'hp') f.sort((a, b) => numHp(b) - numHp(a) || a.name.localeCompare(b.name, 'ja'));
-    else f.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    else if (s === 'name') f.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    else f.sort((a, b) => firstCh(a) - firstCh(b) || numHp(a) - numHp(b) || a.name.localeCompare(b.name, 'ja'));
 
     const pill = document.getElementById('resultCount');
     if (pill) pill.textContent = f.length + '体';
@@ -554,7 +559,7 @@ window.monsterDetail = function(m) {
     listEl.innerHTML = f.map(m => {
       const loc = (m.locations || []).length, dr = (m.drops || []).length;
       const hp = (m.profile || {}).hp;
-      const sub = esc(raceOf(m)) + ' ・ 出現' + loc + 'ヶ所 ・ ドロップ' + dr + '件' + (hp ? ' ・ HP' + esc(hp) : '');
+      const ch = chLabel(m); const sub = (ch ? esc(ch) + ' ・ ' : '') + esc(raceOf(m)) + ' ・ ドロップ' + dr + '件' + (hp ? ' ・ HP' + esc(hp) : '');
       return '<button class="monster-card" type="button" data-mon="' + esc(m.name) + '">' +
         '<span class="item-top"><strong>' + esc(m.name) + '</strong><small>' + sub + '</small></span>' +
         '<span class="chevron">›</span></button>';

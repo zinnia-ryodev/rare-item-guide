@@ -4,7 +4,7 @@
 Deterministic. Sort orders were reverse-engineered against the original
 hand-built page and verified byte-identical (980 items + 390 monsters).
 """
-import sqlite3, json, sys, os
+import sqlite3, json, sys, os, re
 
 PF = [("race","race"),("hp","hp"),("strength","strength"),("vitality","vitality"),
       ("attack","attack"),("accuracy","accuracy"),("attacks","attacks"),("exp","exp"),
@@ -65,6 +65,19 @@ def build(dbpath):
         mid = r["id"]
         locs = [{"chapter": l["chapter"], "dungeon": l["dungeon"], "race": l["race"],
                  "marker": l["marker"] or None} for l in loc_by_mon.get(mid, [])]
+        # fallback: monster_profiles.location_text (tower / event dungeons, no chapter)
+        if not locs:
+            pr = prof_by_mon.get(mid) or {}
+            lt = (pr.get("location_text") or "").strip()
+            if lt:
+                prace = pr.get("race")
+                seen = set()
+                for dn in re.split(r"[・･]", lt):
+                    dn = dn.strip()
+                    if dn and dn not in seen:
+                        seen.add(dn)
+                        locs.append({"chapter": "塔・イベント", "dungeon": dn,
+                                     "race": prace, "marker": None})
         loc_idx = {}
         for i, l in enumerate(loc_by_mon.get(mid, [])):
             loc_idx.setdefault(l["dungeon"], i)

@@ -495,7 +495,7 @@ window.monsterDetail = function(m) {
     return fromLoc.join('・') || '—';
   };
   const hpVal = m => { const n = parseInt((m.profile || {}).hp, 10); return isNaN(n) ? null : n; };
-  const CH_ORDER = ['一章', '二章', '三章', '四章', '五章', '六章', '七章', '神々の宴', 'エクストラ'];
+  const CH_ORDER = ['一章', '二章', '三章', '四章', '五章', '六章', '七章', '神々の宴', 'エクストラ', '塔・イベント'];
   const chIdx = c => { const i = CH_ORDER.indexOf(c); return i < 0 ? 90 : i; };
   const firstCh = m => { const cs = (m.locations || []).map(l => chIdx(l.chapter)); return cs.length ? Math.min.apply(null, cs) : 99; };
   const chLabel = m => { const r = firstCh(m); return r < 99 ? (CH_ORDER[r] || '') : ''; };

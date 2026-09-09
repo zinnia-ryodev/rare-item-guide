@@ -32,7 +32,7 @@ def sha(path):
 
 
 def build():
-    for s in ("extract_items.py", "extract_party.py"):
+    for s in ("extract_items.py", "enrich_monsters.py", "extract_party.py"):
         r = subprocess.run([sys.executable, os.path.join(ROOT, "build", s)],
                            capture_output=True, text=True)
         if r.returncode != 0:

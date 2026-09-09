@@ -2,7 +2,8 @@
 """Assemble index.html from src/template.html + generated / curated data.
 
   generated (deterministic):
-    extract_items.py  data/*.sqlite3          -> RARE_ITEMS, RARE_MONSTERS, PARTY_RECS
+    extract_items.py    data/*.sqlite3               -> RARE_ITEMS, RARE_MONSTERS, PARTY_RECS
+    enrich_monsters.py  data/wiki/monster-encyclopedia.html -> backfill RARE_MONSTERS 種族/出現地
     extract_party.py  data/wiki/party-*.html  -> PARTY_BUILDS, PARTY_RECS_PROSE
   curated (hand-written, wiki-derived, with a drift alarm):
     src/content/treh_check.json   <- check_treh.py  vs data/wiki/treasure-hunt.html
@@ -53,6 +54,7 @@ def detect_game_ver():
 
 def main():
     run("extract_items.py")
+    run("enrich_monsters.py")
     run("extract_party.py")
     run("check_treh.py", hard=False)   # drift is a warning, not a failure
     run("check_guide.py", hard=False)

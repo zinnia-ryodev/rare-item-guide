@@ -18,11 +18,12 @@ data/
   guildmono2_rare_items.sqlite3   正本（アイテム/モンスター/loot/推奨パーティ）
   guildmono2_monsters.sqlite3
   wiki/                            スクレイプ原本（追従の証跡）
-    party-formations.html / treasure-hunt.html / drop-item.html
+    party-formations.html / treasure-hunt.html / drop-item.html / monster-encyclopedia.html
     FETCHED_AT.txt                 取得日時(UTC)
 build/
   build.py            index.html を再生成（マーカーを埋める）
   extract_items.py    [生成] sqlite      -> RARE_ITEMS / RARE_MONSTERS / PARTY_RECS
+  enrich_monsters.py  [生成] モンスター図鑑 -> RARE_MONSTERS の種族/出現地を穴埋め・不正行を除去
   extract_party.py    [生成] wiki(html)  -> PARTY_BUILDS / PARTY_RECS_PROSE
   check_treh.py       [検査] treh_check.json と treasure-hunt.html の乖離を検知
   check_guide.py      [検査] guide.json と drop-item.html の見出し構造の乖離を検知

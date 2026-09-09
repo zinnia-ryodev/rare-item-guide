@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head prefix="og: https://ogp.me/ns# fb: https://ogp.me/ns/fb# article: https://ogp.me/ns/article#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <script>
+    (function () {
+        // スマホブラウザの「PCサイトを見る」で送られてくる「明らかにスマホっぽくない UA」のときは
+        // ビューポートを固定幅とし、CSS メディアクエリでレスポンシブなレイアウトになるのを避けるトリック。
+        // モバイル OS でない場合も同様に固定され、ウィンドウ幅を狭めてもレイアウトが変わらない。
+        var m = /(Android|iPhone|iPad)/.exec(navigator.userAgent)
+        if (m && m[1] !== 'iPhone') return
+        var meta = document.querySelector('meta[name="viewport"]')
+        if (!meta) return
+        // SEE https://github.com/kotoken/wikiwiki/issues/2102
+        // Webkit の仕様により iOS ではブラウザ幅がモバイルサイズの時、フォントサイズが 16px 未満のフォーム入力欄に
+        // フォーカスすると強制的にズームしてしまう。
+        // これを避けるためには viewport に user-scalable=no を指定する必要があるのだが、
+        // そうすると Android では ユーザー操作によるピンチズームができなくなってしまう（iOSでは、ピンチズームに関しては
+        // user-scalable=no の指定を無視する）ので、iPhone だけ user-scalable=no を指定するようにする
+        meta.setAttribute('content', m
+            ? 'width=device-width,minimum-scale=1,initial-scale=1,user-scalable=no'
+            : 'width=980')
+    })()
+</script>
+
+    <meta name="description" content="冒険者ギルド物語2 Wiki*">
+        <meta property="og:url" content="https://wikiwiki.jp/guildmono2/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="モンスター図鑑 - 冒険者ギルド物語2 Wiki*" />
+    <meta property="og:description" content="冒険者ギルド物語2 Wiki*" />
+    <meta property="og:site_name" content="冒険者ギルド物語2 Wiki*" />
+    <meta property="og:image" content="https://cdn.wikiwiki.jp/to/w/common/image/wikiwiki_ogp.png?v=4" />
+    <title>モンスター図鑑 - 冒険者ギルド物語2 Wiki*</title>
+
+    <link rel="alternate" href="/guildmono2/::cmd/mixirss" type="application/rss+xml" title="RSS" />
+
+    <link rel="icon" href="https://cdn.wikiwiki.jp/to/w/common/user-favicon.ico?v=4"/>
+    <link rel="stylesheet" href="https://cdn.wikiwiki.jp/to/w/common/assets/dist/wikiwiki-dbc3538ca778dc7fcfbe.min.css" type="text/css">
+<link rel="stylesheet" href="https://cdn.wikiwiki.jp/to/w/common/assets/dist/skin-official-81ebeecb646b6428a08f.min.css" type="text/css">
+    
+    <script type="text/javascript" src="https://cdn.wikiwiki.jp/to/w/common/assets/dist/ad-1bf004520fc167abbea6.min.js"></script>
+    <script>
+    var wi_stay = (function () {
+        var wi_data_raw = localStorage.getItem('browsingStatistics');
+        var wi_data = wi_data_raw ? (JSON.parse(wi_data_raw) || {}) : {};
+        var stay = Number(wi_data.stay);
+        if (isNaN(stay)) {
+            stay = 0;
+        }
+        return stay;
+    })();
+    var wi_data_raw = localStorage.getItem('usageStatistics');
+    var wi_data =     wi_data_raw ? (JSON.parse(wi_data_raw) || {}) : {};
+    var wi_edit =     String(wi_data.edit || 0);
+    var wi_freeze =   String(wi_data.freeze || 0);
+    var wi_comment =  String(wi_data.comment || 0);
+    var wi_group = String(wi_data.group || "N");
+    var wi_smsAuth = wi_data.smsAuth || false;
+    var wi_hasPosted = wi_data.hasPosted || false;
+    var wi_agreement = String(wi_data.agreementStatus || "false");
+    if (document.referrer.length !== 0) {
+        var wi_uri = new URL(document.referrer);
+        var wi_referer = wi_uri.hostname;
+    } else {
+        var wi_referer = "unknown";
+    }
+
+    // Chromium系判定
+    function isChromium() {
+        var ua = navigator.userAgent;
+        // Edge, Opera, Chrome, Chromium, Brave など
+        return /\b(Chrome|Chromium|Edg|OPR|Brave)\b/.test(ua) && !/Silk|UCBrowser|SamsungBrowser|CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
+    }
+
+    var wi_ismobile;
+    var wi_device;
+    if (isChromium() && navigator.userAgentData) {
+        wi_ismobile = navigator.userAgentData.mobile;
+        if (wi_ismobile) {
+            if (navigator.userAgentData.platform === "Android") {
+                wi_device = "and";
+            } else {
+                wi_device = "ios";
+            }
+        } else {
+            wi_device = "pc";
+        }
+    } else {
+        wi_ismobile = !!navigator.userAgent.match(/iPhone|Android.+Mobile/);
+        if (navigator.userAgent.match(/Android.+Mobile/)) {
+            wi_device = "and";
+        } else if (navigator.userAgent.match(/iPhone/)) {
+            wi_device = "ios";
+        } else {
+            wi_device = "pc";
+        }
+    }
+
+    var wi_isportrait = window.matchMedia("(orientation: portrait)").matches;
+    var wi_isinbound = wi_referer.includes(window.location.hostname) ? false : true;
+    var wi_random100 = Math.floor(Math.random() * (100 - 1) + 1);
+    var wi_random110 = Math.floor(Math.random() * 10) + 1;
+    var wi_isread_yet = true;
+    var wi_location_hash = location.hash || false;
+</script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3Y8FN9EFS7"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3Y8FN9EFS7', {
+        'content_group': 'guildmono2',
+        'user_properties': {
+            'user_group':     wi_group,
+            'user_agreement': wi_agreement,
+            'edit_count':     wi_edit,
+            'comment_count':  wi_comment,
+            'sms_auth':       String(wi_smsAuth)
+        }
+    });
+    
+</script>
+
+<script>
+    window.wikiFq = createWikiFq();
+</script>
+<script>
+    var wi_recref = recordReferrerDomain();
+</script>
+
+<script>
+const visitData_20241117 = (() => {
+const RESET_INTERVAL_MINUTES = 30;
+const now = Date.now();
+const resetIntervalMs = RESET_INTERVAL_MINUTES * 60 * 1000;
+const storageKey = "internalVisitData";
+let data = JSON.parse(localStorage.getItem(storageKey)) || { count: 0, lastVisit: now };
+if (now - data.lastVisit > resetIntervalMs) data = { count: 0, lastVisit: now };
+if (document.referrer && new URL(document.referrer).hostname === window.location.hostname) {
+data = { count: data.count + 1, lastVisit: now };
+localStorage.setItem(storageKey, JSON.stringify(data));
+}
+return data;
+})();
+
+const int_conditions = [
+wi_ismobile,
+wi_group === 'N',
+wi_agreement === 'false',
+!wi_isinbound,
+visitData_20241117.count === 1,
+];
+
+const int_conditions_pc = [
+    !wi_ismobile,
+    wi_group === 'N',
+    wi_agreement === 'false',
+    !wi_isinbound,
+    visitData_20241117.count === 1,
+];
+</script>
+<script>
+(function () {
+  const FLAG = "iminst_pc";
+  const url = new URL(location.href);
+
+  if (url.searchParams.get(FLAG) === "1") {
+    url.searchParams.delete(FLAG);
+    history.replaceState(null, "", url.toString());
+    return;
+  }
+
+  if (Array.isArray(int_conditions_pc) && int_conditions_pc.every(Boolean)) {
+    url.searchParams.set(FLAG, "1");
+    location.href = url.toString();
+  }
+})();
+</script>
+<script>
+(function(){
+  const url=new URL(location.href);
+  const f=wi_device==="ios"?"iminst_ios":wi_device==="and"?"iminst_and":null;
+  if(!f)return;
+  if(url.searchParams.get(f)==="1"){
+    url.searchParams.delete(f);
+    history.replaceState(null,"",url.toString());
+    return;
+  }
+  if(Array.isArray(int_conditions)&&int_conditions.every(Boolean)){
+    url.searchParams.set(f,"1");
+    location.href=url.toString();
+  }
+})();
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KQ52VZ3');</script>
+<!-- End Google Tag Manager -->
+
+
+<script type="text/javascript">
+    window.pbjs = window.pbjs || {};
+    window.pbjs.que = window.pbjs.que || [];
+</script>
+<script async="async" src="https://flux-cdn.com/client/ukiuki/flux_wikiwiki_AS_TM_AT.min.js"></script>
+<script>
+window.googletag = window.googletag || {};
+window.googletag.cmd = window.googletag.cmd || [];
+</script>
+<script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+<script>
+
+var wi_adslot_rectangle = [[300,250],[1,1]];
+var wi_adslot = [[300,250],[1,1]];
+if (document.documentElement.clientWidth > 406) {
+  wi_adslot_rectangle = [[300,250],[336,280],[1,1]];
+  wi_adslot = [[468,60],[300,250],[1,1]];
+}
+
+window.defineSlotFlux = [];
+if (wi_ismobile && wi_isportrait) {
+  defineSlotFlux.push({"slotID": "div-gpt-ad-1563441919648-0", "sizes": [[320, 100], [320, 50]], "slotName":"WIKIWIKI_SP_OVERLAY"});
+}
+    if (wi_isinbound && wi_ismobile && wi_group == "N" && wi_agreement === "false") {
+      defineSlotFlux.push({"slotID": "div-gpt-ad-1563430750445-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_SP_INBOUND"});
+    } else if (wi_isinbound && wi_group == "N" && wi_agreement === "false") {
+      defineSlotFlux.push({"slotID": "div-gpt-ad-1567409776345-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_INBOUND"});
+      defineSlotFlux.push({"slotID": "div-gpt-ad-1658802281376-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_INBOUND_RIGHT"});
+    }
+  if (wi_ismobile && !wi_isinbound) {
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1562925510696-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_SP_CAPTION"});
+  } else if (wi_group === 'N' && wi_agreement === 'false' && !wi_isinbound) {
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1565253136679-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_CAPTION"});
+  }
+if (wi_ismobile && wi_group == "N" && wi_agreement === "false") {
+      defineSlotFlux.push({"slotID": "div-gpt-ad-1731135777754-0", "sizes": [[300,600]], "slotName":"WIKIWIKI_SP_CAPTION_300x600"});
+}
+      defineSlotFlux.push({"slotID": "div-gpt-ad-1566473930452-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_CAPTION_20TH"});
+  if (wi_ismobile) {
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1567408559923-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_SP_SECOND"});
+  } else {
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1567408559923-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_BOTTOM_LEFT"});
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1658912377789-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_BOTTOM_RIGHT"});
+  }
+</script>
+<script type="text/javascript">
+if (defineSlotFlux.length) {
+    window.fluxtag = {
+        readyBids: { prebid: false, google: false },
+        failSafeTimeout: 3e3, // 3秒でフェイルセーフ発動
+        isFn: function isFn(object) {
+            var _t = 'Function';
+            var toString = Object.prototype.toString;
+            return toString.call(object) === '[object ' + _t + ']';
+        },
+        launchAdServer: function () {
+            if (!fluxtag.readyBids.prebid) {
+                return;
+            }
+            fluxtag.requestAdServer();
+        },
+        requestAdServer: function () {
+            if (!fluxtag.readyBids.google) {
+                fluxtag.readyBids.google = true;
+                googletag.cmd.push(function () {
+                    var pbjsLoaded = !!(window.pbjs && pbjs.que &&
+                        fluxtag.isFn(pbjs.que.push) &&
+                        (pbjs.libLoaded || (pbjs.setTargetingForGPTAsync &&
+                            fluxtag.isFn(pbjs.setTargetingForGPTAsync))));
+                    if (pbjsLoaded) {
+                        pbjs.que.push(function () {
+                            if (pbjs.setTargetingForGPTAsync && fluxtag.isFn(pbjs.setTargetingForGPTAsync)) {
+                                try {
+                                    Promise.resolve(pbjs.setTargetingForGPTAsync())
+                                        .catch(function () {})
+                                        .then(function () {
+                                            googletag.pubads().refresh();
+                                        });
+                                } catch (e) {
+                                    googletag.pubads().refresh();
+                                }
+                            } else {
+                                googletag.pubads().refresh();
+                            }
+                        });
+                    } else {
+                        googletag.pubads().refresh();
+                    }
+                });
+            }
+        }
+    };
+
+    setTimeout(function () {
+        fluxtag.requestAdServer();
+    }, fluxtag.failSafeTimeout);
+}
+</script>
+<script>
+googletag.cmd.push(function() {
+    if (wi_ismobile && wi_isportrait) {
+        googletag.defineSlot('/19033742/WIKIWIKI_SP_OVERLAY',[[320,100],[320,50],[1,1]],'div-gpt-ad-1563441919648-0').addService(googletag.pubads());
+    }
+    if (wi_isinbound && wi_ismobile && wi_group == "N" && wi_agreement === "false") {
+      googletag.defineSlot('/19033742/WIKIWIKI_SP_INBOUND',[[300,250]],
+        'div-gpt-ad-1563430750445-0').addService(googletag.pubads());
+    } else if (wi_isinbound && wi_group == "N" && wi_agreement === "false") {
+      googletag.defineSlot('/19033742/WIKIWIKI_PC_INBOUND',[[336,280],[300,250]],
+        'div-gpt-ad-1567409776345-0').addService(googletag.pubads());
+      googletag.defineSlot('/19033742/WIKIWIKI_PC_INBOUND_RIGHT',[[336,280],[300,250]],
+        'div-gpt-ad-1658802281376-0').addService(googletag.pubads());
+    }
+  if (wi_ismobile && !wi_isinbound) {
+    googletag.defineSlot('/19033742/WIKIWIKI_SP_CAPTION',[[300,250],[1,1]],'div-gpt-ad-1562925510696-0').addService(googletag.pubads());
+  } else if (wi_group === 'N' && wi_agreement === 'false' && !wi_isinbound) {
+    googletag.defineSlot('/19033742/WIKIWIKI_PC_CAPTION',[[300,250],[1,1]],'div-gpt-ad-1565253136679-0').addService(googletag.pubads());
+  }
+if (wi_ismobile && wi_group == "N" && wi_agreement === "false") {
+    googletag.defineSlot('/19033742/WIKIWIKI_SP_CAPTION_300x600',[[300,600],[1,1]],
+        'div-gpt-ad-1731135777754-0').addService(googletag.pubads());
+}
+    googletag.defineSlot('/19033742/WIKIWIKI_PC_CAPTION_20TH',[[300,250],[1,1]],
+        'div-gpt-ad-1566473930452-0').addService(googletag.pubads());
+    if (wi_ismobile) {
+        googletag.defineSlot('/19033742/WIKIWIKI_SP_SECOND',[[300,250]],
+        'div-gpt-ad-1567408559923-0').addService(googletag.pubads());
+    } else {
+        googletag.defineSlot('/19033742/WIKIWIKI_PC_BOTTOM_LEFT',[[336,280],[300,250]],
+        'div-gpt-ad-1567408559923-0').addService(googletag.pubads());
+        googletag.defineSlot('/19033742/WIKIWIKI_PC_BOTTOM_RIGHT',[[336,280],[300,250]],
+        'div-gpt-ad-1658912377789-0').addService(googletag.pubads());
+    }
+  if (window.innerWidth >= 768 && wi_group === 'N' && wi_agreement === 'false') {
+    googletag.defineOutOfPageSlot('/19033742/WIKIWIKI_SP_OVERLAY_ANCHOR', googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR).addService(googletag.pubads());
+  }
+    googletag.setConfig({ targeting: {
+        "gpolicy": "sunny",
+        "site": "guildmono2"
+    } });
+    googletag.setConfig({ collapseDiv: 'ON_NO_FILL' });
+    googletag.setConfig({ singleRequest: true });
+    googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+        var slot = event.slot;
+        if (document.getElementById(slot.getSlotElementId()) != null){
+            var slotElm = document.getElementById(slot.getSlotElementId());
+            if (slotElm && slotElm.className === 'overlay-ad-wrapper') {
+                var overlayRenderedEvent = document.createEvent('Event');
+                overlayRenderedEvent.initEvent('overlay-ad-rendered', true, true);
+                slotElm.dispatchEvent(overlayRenderedEvent);
+            }
+        }
+    });
+    googletag.setConfig({
+        lazyLoad: {
+            fetchMarginPercent: 50,   // 0.5画面分まできたらリクエスト
+            renderMarginPercent: 50,  // 0.5画面分まできたら描画
+            mobileScaling: 2.0        // モバイルはスクロールが早いため2倍（1.0画面分）にする
+        }
+    });
+    if (defineSlotFlux.length) {googletag.setConfig({ disableInitialLoad: true });};
+    googletag.enableServices();
+    if (defineSlotFlux.length) {
+        pbjs.que.push(function () {
+            window.pbFlux.prebidBidder();
+        });
+    }
+});
+</script>
+
+<script>
+googletag.cmd.push(function() {
+  googletag.setConfig({ targeting: {
+    "wi_agreement": String(wi_data.agreementStatus || "false"),
+    "wi_group": String(wi_data.group || "N"),
+    "wi_comment": wi_comment.length.toString(),
+    "wi_edit": wi_edit.length.toString(),
+    "wi_freeze": wi_freeze.length.toString(),
+    "wi_smsAuth": String(wi_data.smsAuth || false),
+    "wi_hasPosted": String(wi_data.hasPosted || false),
+    "wi_referer": String(wi_referer || "unknown"),
+    "wi_random110": String(wi_random110 || "0"),
+    "wi_hour": ('0' + new Date().getHours()).slice(-2)
+  } });
+});
+</script>
+
+<script>
+googletag.cmd.push(function() {
+  googletag.setConfig({ targeting: { "wi_rating_in_01": "true" } });
+});
+</script>
+
+<style>
+.pc-caption-ad-default {
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-start;
+    gap: 10px 5px;
+    min-height:280px;
+    position: sticky;
+    z-index: 3;
+    top: 45px;
+}
+
+.pc-caption-ad-center{
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    gap: 10px 5px;
+    min-height:280px;
+    position: sticky;
+    z-index: 3;
+    top: 45px;
+}
+.pc-caption-ad-mobile{
+    margin-top:20px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:center;
+    min-height:331px;
+    position: sticky;
+    z-index: 3;
+    top: 45px;
+}
+.pc-caption-ad-mobile-300x600{
+    margin-top:20px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:center;
+    min-height:331px;
+}
+.default-advertisement {
+    background-color: transparent;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 576 512'%3E%3C!--!Font Awesome Pro 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2024 Fonticons, Inc.--%3E%3Cpath d='M16 48l0 416 544 0 0-416L16 48zM0 32l16 0 544 0 16 0 0 16 0 416 0 16-16 0L16 480 0 480l0-16L0 48 0 32zM320 280a56 56 0 1 0 112 0 56 56 0 1 0 -112 0zm56-72c22.6 0 42.8 10.4 56 26.7l0-66.7 0-8 16 0 0 8 0 112 0 64 0 8-16 0 0-8 0-18.7c-13.2 16.3-33.4 26.7-56 26.7c-39.8 0-72-32.2-72-72s32.2-72 72-72zM183.1 160l5.2 0 7.3 0 5.2 0 2.1 4.8L284.2 352l-17.4 0-20.8-48-107.8 0-20.8 48-17.4 0L181 164.8l2.1-4.8zM145 288l94 0L192 179.7 145 288z' fill='%23BBB'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25px 25px;
+}
+
+@media (max-width: 500px) {
+  .caption-flybox:has(iframe[id^="google_ads_iframe_"]) {
+    position: relative;
+    min-height: 450px;
+  }
+}
+</style>
+
+
+<script>
+googletag.cmd.push(function() {
+    const pcCaptionPaths = [
+        '/19033742/WIKIWIKI_PC_CAPTION',
+        '/19033742/WIKIWIKI_PC_CAPTION_SIDE_BY',
+        '/19033742/WIKIWIKI_PC_CAPTION_20TH',
+        '/19033742/WIKIWIKI_CAPTION_B'
+    ];
+
+    const spCaptionPaths = [
+        '/19033742/WIKIWIKI_SP_CAPTION',
+        '/19033742/WIKIWIKI_SP_CAPTION_300x600'
+    ];
+
+    googletag.pubads().addEventListener('slotRenderEnded', function(event) {
+        const slotElement = document.getElementById(event.slot.getSlotElementId());
+        const parent = slotElement?.parentNode;
+
+        if (parent && !event.isEmpty) {
+            if (pcCaptionPaths.includes(event.slot.getAdUnitPath())) {
+                parent.classList.add(parent.clientWidth < 769 ? "pc-caption-ad-center" : "pc-caption-ad-default");
+            } else if (spCaptionPaths.includes(event.slot.getAdUnitPath())) {
+                if (event.slot.getAdUnitPath() === '/19033742/WIKIWIKI_SP_CAPTION_300x600') {
+                    parent.classList.add("pc-caption-ad-mobile-300x600");
+                } else {
+                    parent.classList.add("pc-caption-ad-mobile");
+                }
+            }
+        }
+    });
+
+    googletag.pubads().addEventListener('slotOnload', function(event) {
+        const slotElement = document.getElementById(event.slot.getSlotElementId());
+        slotElement?.parentNode?.classList.remove("default-advertisement");
+    });
+});
+</script>
+
+<link rel="preload" as="script" href="https://pdn.adingo.jp/p.js">
+<link rel="preconnect" href="https://sh.adingo.jp" crossorigin="use-credentials">
+    <link rel="canonical" href="https://wikiwiki.jp/guildmono2/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91">
+    <style>
+@media screen and (min-width: 820px) {
+  .container-wrapper {
+    min-width: 980px;
+    max-width: none;
+  }
+}
+</style>
+<style>
+  body {
+      font-family: Verdana, Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      font-size: 12px;
+  }
+</style>
+<style>
+  @media screen and (max-width: 819px), print and (max-width: 180mm) {
+    body {
+        font-size: 13px;
+    }
+  }
+</style>
+        <script>
+        window.globalParamsContainer = {"smsAuthParams":{"actionTrollingDefenceCheck":"\/guildmono2\/::cmd\/trolling_defence_pass","actionSubmitNumber":"\/p\/sms-auth\/code\/request","actionSubmitCode":"\/p\/sms-auth\/code\/activate","cookieName":"authkey"},"editAssistantImgSrc":{"face_smile":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/smile.png?v=4","face_bigsmile":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/bigsmile.png?v=4","face_huh":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/huh.png?v=4","face_oh":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/oh.png?v=4","face_wink":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/wink.png?v=4","face_sad":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/sad.png?v=4","face_worried":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/worried.png?v=4","face_tear":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/tear.png?v=4","face_tere":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/tere.png?v=4","face_shock":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/shock.png?v=4","face_heart":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/heart.png?v=4","face_star":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/star.gif?v=4","face_hatena":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/hatena.gif?v=4","face_tip":"https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/face\/tip.gif?v=4"},"experimentalFeature":false};
+    </script>
+</head>
+<body class="">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ52VZ3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<style>
+/* 1 */
+@media (max-width: 500px) {
+    body {
+        margin-bottom: 129px !important;
+        transition: margin-bottom 0.4s ease-in-out;
+    }
+    body:has(#div-gpt-ad-1563441919648-0 iframe[height="50"]) {
+        margin-bottom: 79px !important;
+    }
+}
+
+/* 2 */
+#overlay-anchor-wrapper {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    z-index: 99998;
+    pointer-events: none;
+    transform: translateY(100%);
+    transition: transform 0.4s ease-in-out 10s;
+}
+
+body:has(#div-gpt-ad-1563441919648-0 iframe) #overlay-anchor-wrapper {
+    transform: translateY(0);
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+
+/* 3 */
+#pc-overlay-ad-parent-container {
+    contain: layout style;
+    content-visibility: auto;
+
+    width: 100%;
+    background-color: var(--h2-background-color, #ffffff) !important;
+    padding-top: 5px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
+    pointer-events: auto;
+
+    max-height: 105px;
+    height: auto;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible !important;
+}
+
+#pc-overlay-ad-parent-container:has(iframe[height="50"]) {
+    max-height: 60px;
+}
+
+/* 4 */
+#pc-overlay-ad-close-button {
+    position: absolute;
+    top: -24px;
+    right: 12px;
+    width: 38px; height: 24px;
+    background-color: var(--h2-background-color, #ffffff) !important;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.6s ease-out 10s, transform 0.6s ease-out 10s;
+}
+
+body:has(#div-gpt-ad-1563441919648-0 iframe) #pc-overlay-ad-close-button {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease-out 1.8s, transform 0.6s ease-out 1.8s;
+}
+
+#pc-overlay-ad-close-button svg {
+    width: 14px; height: 14px;
+    fill: var(--h2-text-color, #666666) !important;
+}
+
+/* 5 */
+#ad-close-trigger { display: none; }
+
+#ad-close-trigger:checked ~ #overlay-anchor-wrapper {
+    transform: translateY(100%) !important;
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 1, 1), opacity 0.4s cubic-bezier(0.4, 0, 1, 1) !important;
+    pointer-events: none;
+}
+
+body:has(#ad-close-trigger:checked) {
+    margin-bottom: 0 !important;
+}
+
+/* 6 */
+.overlay-ad-container { 
+    display: flex; justify-content: center; align-items: center; 
+    min-height: 50px; position: relative; 
+}
+.overlay-ad-container::before { 
+    content: ""; position: absolute; width: 320px; height: 100%; 
+    border-radius: 4px; z-index: 0;
+    animation: quietPulse 3s infinite; 
+}
+@keyframes quietPulse { 0%, 100% { background-color: transparent; } 50% { background-color: rgba(0, 0, 0, 0.04); } }
+
+#div-gpt-ad-1563441919648-0 { position: relative; z-index: 1; display: flex; justify-content: center; width: 100%; }
+#div-gpt-ad-1563441919648-0 iframe {
+    animation: fadeInQuick 0.5s ease-in-out 0.2s both !important;
+    background: var(--h2-background-color, #ffffff);
+}
+@keyframes fadeInQuick { from { opacity: 0; } to { opacity: 1; } }
+</style>
+
+<input type="checkbox" id="ad-close-trigger">
+<div id="overlay-anchor-wrapper" class="hidden-switch-class">
+    <label for="ad-close-trigger" id="pc-overlay-ad-close-button">
+        <svg viewBox="0 0 384 512"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+    </label>
+<div id="pc-overlay-ad-parent-container" class="hidden-switch-class">
+    <div id="pc-overlay-ad-container-hidden" class="overlay-ad-container">
+        <div id="pc-overlay-ad-container">
+            <div id='div-gpt-ad-1563441919648-0' class="overlay-ad-wrapper"></div>
+        </div>
+    </div>
+</div>
+</div>
+<noscript>
+    <div class="noscript-alert">
+        <i class="fa-solid fa-exclamation-triangle"></i>
+        ブラウザの JavaScript がオフ（ブロックまたは許可しない）に設定されているため、このページは正常に機能しません。
+    </div>
+</noscript>
+<div class="container-wrapper">
+
+    <div class="container clearfix">
+                    <div id="header" class="default-header">
+                <a href="/guildmono2/">    <img id="logo" src="https://cdn.wikiwiki.jp/to/w/common/image/pukiwiki.svg?v=4" width="70" height="70" title="冒険者ギルド物語2 Wiki*" alt="Logo"></a>                <br />
+                <a href="/guildmono2/" title="冒険者ギルド物語2 Wiki*"><span class="title2">冒険者ギルド物語2 Wiki*</span></a>
+            </div>
+            </div>
+
+    <div class="container clearfix">
+        <div class="navibar-container-all">
+            <div class="navibar-container navibar-desktop">
+                <div id="navigator">[ <a href="/guildmono2/">ホーム</a> ]
+
+[ <a href="/guildmono2/::cmd/newpage?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">新規</a> | <a href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">編集</a> | <a href="/guildmono2/::cmd/attach?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">添付</a> ]
+
+[ <a href="/guildmono2/::cmd/list" rel="nofollow">一覧</a> | <a href="/guildmono2/RecentChanges" rel="nofollow">最終更新</a> | <a href="/guildmono2/::cmd/diff?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">差分</a> | <a href="/guildmono2/::cmd/backup?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">バックアップ</a> ]
+
+[ <a href="/guildmono2/::cmd/freeze?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">凍結</a> | <a href="/guildmono2/::cmd/template?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">複製</a> | <a href="/guildmono2/::cmd/rename?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow">名前変更</a> ]
+
+[ <a href="/guildmono2/::cmd/help" rel="nofollow">ヘルプ</a> ]</div>            </div>
+            <div class="navibar-container navibar-mobile">
+                <div id="navigator">[ <a href="/guildmono2/">ホーム</a> ]
+
+[ <a id="menu-in-nav" href="#menubar" class="menu-in-nav">Menu<i class="fa-solid fa-arrow-alt-down"></i></a> | <a href="/guildmono2/RecentChanges" rel="nofollow">最終更新</a> ]</div>            </div>
+            <div class="toolbox toolbox-searchbar">
+                <form action="/guildmono2/::cmd/search" method="get">
+                    <input type="search"  name="word" value="" size="16" placeholder="サイト内検索">
+                    <input type="hidden" name="type" value="AND">
+                    <input type="submit" value="検索">
+                </form>
+            </div>
+        </div>
+        <hr />
+            <div id="responsive-navigation"></div>
+    <div style="display: none;">
+        <div id="edit-menu" class="system-ui">
+            <div id="edit-menu-items">
+                <ul><li><a href="/guildmono2/::cmd/newpage?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar new'></span> 新規</a></li><li><a href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar edit'></span> 編集</a></li><li><a href="/guildmono2/::cmd/attach?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar upload'></span> 添付</a></li></ul>
+<ul><li><a href="/guildmono2/::cmd/list" rel="nofollow"><span class='system-icon toolbar list'></span> 一覧</a></li><li><a href="/guildmono2/RecentChanges" rel="nofollow"><span class='system-icon toolbar recent'></span> 最終更新</a></li><li><a href="/guildmono2/::cmd/diff?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar diff'></span> 差分</a></li><li><a href="/guildmono2/::cmd/backup?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar backup'></span> バックアップ</a></li></ul>
+<ul><li><a href="/guildmono2/::cmd/freeze?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar freeze'></span> 凍結</a></li><li><a href="/guildmono2/::cmd/template?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar copy'></span> 複製</a></li><li><a href="/guildmono2/::cmd/rename?refer=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" rel="nofollow"><span class='system-icon toolbar rename'></span> 名前変更</a></li></ul>
+<ul><li><a href="/guildmono2/::cmd/help" rel="nofollow"><span class='system-icon toolbar help'></span> ヘルプ</a></li></ul>
+
+            </div>
+        </div>
+    </div>    </div>
+
+    <div id="contents" class="columns-container three-columns-container container clearfix has-left-column">
+
+        <div class="column-center clearfix">
+            <div class="clearfix">
+                <div id="breadcrumbs" class="system-ui">
+                    <div id="topicpath"><a href="/guildmono2/" title="FrontPage"><i class="fa-solid fa-home" style="margin-left: 6px; display: inline-block; min-width: 1.2em;"></i></a> &gt; モンスター図鑑</div>                </div>
+                <div id="system-icon-container" class="system-ui">
+                                        <span id="share-button-root"></span>                    <span id="admin-contact-root" class="single-system-icon"></span>
+                    <div id="load-panel-root"></div>
+                    <span id="admin-login" class="single-system-icon">
+                        
+<a class="admin-login-status" href="/guildmono2/::cmd/admin_login?return_to=%2Fguildmono2%2F%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" title="未ログイン">
+    <i class="fa-solid fa-cog"></i>
+</a>
+                    </span>
+                </div>
+            </div>
+
+            <div id="body">
+                                
+                <div id="title">
+                                            <h1 class="title">モンスター図鑑</h1>
+                                                                <div id="lastmodified">
+                            Last-modified: 2024-04-05 (金) 15:08:52                                                    </div>
+                                    </div>
+
+                
+<div id="inbound-ad-container">
+  <!-- /19033742/WIKIWIKI_PC_INBOUND -->
+  <div id='div-gpt-ad-1567409776345-0'></div>
+  <!-- /19033742/WIKIWIKI_PC_INBOUND_RIGHT -->
+  <div id='div-gpt-ad-1658802281376-0'></div>
+  <!-- /19033742/WIKIWIKI_SP_INBOUND -->
+  <div id='div-gpt-ad-1563430750445-0' class="hidden-switch-class"></div>
+</div>
+
+<style>
+.pc-inbound-ad-default {
+    margin-top:40px;
+    margin-bottom:40px;
+    display:flex;
+    justify-content:flex-start;
+    gap: 10px 5px;
+    min-height:280px;
+}
+.pc-inbound-ad-center{
+    margin-top:40px;
+    margin-bottom:40px;
+    display:flex;
+    justify-content:center;
+    gap: 10px 5px;
+    min-height:280px;
+    position: relative;
+}
+.pc-inbound-ad-mobile{
+    margin-top:20px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:center;
+    min-height:280px;
+}
+.pc-inbound-ad-close-button {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"%3E%3C!--! Font Awesome Pro 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2024 Fonticons, Inc. --%3E%3Cpath class="fa-secondary" opacity=".4" d="M281.4 390.6L304 413.3 349.3 368l-22.6-22.6L237.3 256l89.4-89.4L349.3 144 304 98.7l-22.6 22.6L192 210.7l-89.4-89.4L80 98.7 34.7 144l22.6 22.6L146.7 256 57.4 345.4 34.7 368 80 413.3l22.6-22.6L192 301.3l89.4 89.4z" fill="%23888"/%3E%3C/svg%3E') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+}
+</style>
+
+<script>
+(function () {
+    const co = document.getElementById('inbound-ad-container');
+    const inboundPaths = [
+        '/19033742/WIKIWIKI_PC_INBOUND',
+        '/19033742/WIKIWIKI_PC_INBOUND_RIGHT'
+    ];
+
+    if (wi_isinbound && wi_group === "N" && wi_agreement === "false") {
+        if (wi_ismobile) {
+            co.classList.add("pc-inbound-ad-mobile","default-advertisement");
+        } else {
+            const width = co.clientWidth;
+            const adClass = width < 683 || (width >= 683 && width < 900) ? ["pc-inbound-ad-center","default-advertisement"] : ["pc-inbound-ad-default"];
+            co.classList.add(...adClass);
+
+            if (adClass.includes("pc-inbound-ad-center")) {
+                googletag.cmd.push(function() {
+                    googletag.pubads().addEventListener('slotOnload', function(event) {
+                        if (inboundPaths.includes(event.slot.getAdUnitPath())) {
+                            let closeButton = co.querySelector(".pc-inbound-ad-close-button");
+                            if (!closeButton) {
+                                closeButton = document.createElement("div");
+                                closeButton.classList.add("pc-inbound-ad-close-button");
+                                closeButton.onclick = () => co.style.display = "none";
+                                co.appendChild(closeButton);
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    }
+})();
+</script>
+
+                <div class="search-words small" style="display: none;">
+    <div class="small">これらのキーワードがハイライトされています：<ul class="search-words-words"></ul></div>
+    <hr class="full_hr">
+</div>
+                <div id="content">
+                                        <div class="contents">
+<a id="contents-index"></a>
+<ul class="list2"><li><a href="#k68b9416">備考 </a></li>
+<li><a href="#zb7c6a83">エクストラ </a></li>
+<li><a href="#cd915212">一章 </a></li>
+<li><a href="#p404f572">二章 </a></li>
+<li><a href="#xe5385f6">三章 </a></li>
+<li><a href="#t0bd1887">四章 </a></li>
+<li><a href="#i15f5df3">五章 </a></li>
+<li><a href="#d4264a42">六章 </a></li>
+<li><a href="#z6cac9bc">七章 </a></li>
+<li><a href="#pe2442a9">神々の宴 </a></li></ul>
+</div>
+<h3 id="h3_content_1_0" >備考  <a class="anchor_super" name ="k68b9416"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=k68b9416" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%83%E3%82%AD%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="ラッキーラビット" class="rel-wiki-page">ラッキーラビット</a><!--/autolink-->は一章から、<!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="シルバーラビット" class="rel-wiki-page">シルバーラビット</a><!--/autolink-->は二章以降、<!--autolink--><a href="/guildmono2/%E3%83%9F%E3%83%A9%E3%82%AF%E3%83%AB%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="ミラクルラビット" class="rel-wiki-page">ミラクルラビット</a><!--/autolink-->は六章以降のダンジョンに稀に出現します。<br />
+ゲーム内の<!--autolink--><a href="/guildmono2/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" title="モンスター図鑑" class="rel-wiki-page">モンスター図鑑</a><!--/autolink-->では<!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%83%E3%82%AD%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="ラッキーラビット" class="rel-wiki-page">ラッキーラビット</a><!--/autolink-->は<!--autolink--><a href="/guildmono2/%E5%B9%B3%E5%8E%9F" title="平原" class="rel-wiki-page">平原</a><!--/autolink-->、<!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="シルバーラビット" class="rel-wiki-page">シルバーラビット</a><!--/autolink-->は<!--autolink--><a href="/guildmono2/%E5%8F%A4%E9%A4%A8" title="古館" class="rel-wiki-page">古館</a><!--/autolink-->にも記載されていますが、ここでは省略しています。</li>
+<li>レアモンスターは生息地として書いてある迷宮以外でも、<!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E5%B7%A3" title="竜の巣" class="rel-wiki-page">竜の巣</a><!--/autolink-->以外の神々の宴の迷宮で稀に出現します(なお、<!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%A8%E6%82%AA%E9%AD%94%E3%81%AE%E6%88%A6%E5%A0%B4" title="竜と悪魔の戦場" class="rel-wiki-page">竜と悪魔の戦場</a><!--/autolink-->では必ず5体セットで出現します)。</li>
+<li>★がついているモンスターは、その迷宮内で1周に戦える回数が決まっています(ボスなど。基本1回)。</li>
+<li>◆がついているモンスターは、撃破するとその迷宮では出現しなくなりますが、日が変わるとリセットされ再度出現するようになります。<br class="spacer">また、<!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%93%E3%83%83%E3%83%88%E3%83%BB%E3%83%81%E3%82%B1%E3%83%83%E3%83%88" title="ラビット・チケット" class="rel-wiki-page">ラビット・チケット</a><!--/autolink-->20枚で即時復活させることが出来ます。</li>
+<li>称号付きの敵が固定で持つスキル [+58/110/175/250%]攻撃/魔法威力の増減(%)・[-14/26/36/45<span class="tooltip" data-tooltip-content="＜&lt;a href=&quot;/guildmono2/%E9%98%B2%E5%BE%A1%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB#m83f43f7&quot; title=&quot;防御系スキル&quot; class=&quot;rel-wiki-page&quot;&gt;スキル付与手段一覧&lt;/a&gt;＞物理攻撃で受けるダメージが減少する。[-X%]物理ダメージ軽減(%)を2種類以上所持している場合、数値が加算される。ただし、[-99%]物理ダメージ軽減(%)を所持している場合、他の[-X%]物理ダメージ軽減(%)は無意味になる。">%]物理ダメージ軽減(%)</span>・[-14/18/22/26<span class="tooltip" data-tooltip-content="＜&lt;a href=&quot;/guildmono2/%E9%98%B2%E5%BE%A1%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB#u711f7b7&quot; title=&quot;防御系スキル&quot; class=&quot;rel-wiki-page&quot;&gt;スキル付与手段一覧&lt;/a&gt;＞魔法攻撃で受けるダメージが減少する。[-X%]魔法ダメージ軽減(%)を2種類以上所持している場合、数値が加算される。ただし、[-99%]魔法ダメージ軽減(%)やそれと同じ効果のスキルを所持している場合、他の[-X%]魔法ダメージ軽減(%)は無意味になる。">%]魔法ダメージ軽減(%)</span> は省略しています。</li>
+<li>ブレスを使用する敵の中には[X<span class="tooltip" data-tooltip-content="＜&lt;a href=&quot;/guildmono2/%E6%94%BB%E6%92%83%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB#e1a0962a&quot; title=&quot;攻撃系スキル&quot; class=&quot;rel-wiki-page&quot;&gt;スキル付与手段一覧&lt;/a&gt;＞ブレス威力がX倍に上昇する。">倍]ブレス強化</span>を所持するものがいますが、図鑑内のブレス威力はその倍率を反映したものとなっているためこのスキルを気にする必要はありません。</li>
+<li>計算式の細かい誤差の都合上、1ズレている部分もありますがご了承ください。<br />
+また、未実装の壊れた敵のステータスも計算式に従って計算して記載しています。元々攻撃回数が1回の敵は壊れたでも1回攻撃のままになる気はしますが、計算式に従うと2回になるのでとりあえず2回で書いています。</li></ul>
+<h3 id="h3_content_1_1" class="heading-after-first">エクストラ  <a class="anchor_super" name ="zb7c6a83"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=zb7c6a83" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li>ラビット系
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%83%E3%82%AD%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="ラッキーラビット" class="rel-wiki-page">ラッキーラビット</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="シルバーラビット" class="rel-wiki-page">シルバーラビット</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9F%E3%83%A9%E3%82%AF%E3%83%AB%E3%83%A9%E3%83%93%E3%83%83%E3%83%88" title="ミラクルラビット" class="rel-wiki-page">ミラクルラビット</a><!--/autolink--> (魔物)</li></ul></li>
+<li>レアモンスター
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%AF%E3%81%90%E3%82%8C%E5%B7%A8%E4%BA%BA" title="はぐれ巨人" class="rel-wiki-page">はぐれ巨人</a><!--/autolink--> (人型)</li>
+<li><a href="/guildmono2/%E8%B8%8A%E3%82%8B%E4%BA%BA%E5%BD%A2%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="踊る人形(モンスター)" class="rel-wiki-page">踊る人形</a> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%89%E3%82%A6%E3%83%BC%E3%83%9E%E3%83%B3" title="ワイルドウーマン" class="rel-wiki-page">ワイルドウーマン</a><!--/autolink--> (人型)</li>
+<li><a href="/guildmono2/%E3%82%BF%E3%82%A4%E3%82%BF%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="タイタン(モンスター)" class="rel-wiki-page">タイタン</a> (人型)</li>
+<li><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%88%E3%83%9E%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="アントマン(モンスター)" class="rel-wiki-page">アントマン</a> (魔物)</li></ul></li></ul>
+<div class="caption-flybox" >
+  <div id="pc-caption-ad-container">
+    <!-- /19033742/WIKIWIKI_PC_CAPTION -->
+    <div id='div-gpt-ad-1565253136679-0'></div>
+    <!-- /19033742/WIKIWIKI_PC_CAPTION_SIDE_BY -->
+    <div id='div-gpt-ad-1719748039754-0' style='max-width: 300px;'></div>
+    <!-- /19033742/WIKIWIKI_SP_CAPTION -->
+    <div id='div-gpt-ad-1562925510696-0' class="hidden-switch-class"></div>
+  </div>
+</div>
+
+<script>
+if (wi_ismobile && !wi_isinbound) {
+    document.getElementById("pc-caption-ad-container").classList.add("default-advertisement","pc-caption-ad-mobile");
+    googletag.cmd.push(function() {googletag.display('div-gpt-ad-1562925510696-0');});
+    if (window.wikiFq.checkWikifqDisplay('wi_fqgroup1',1,60,0.5) && wi_isread_yet ||wi_location_hash === '##gliaplayer') {
+        googletag.cmd.push(function() {googletag.setConfig({ targeting: { wi_fqgroup1: 'true' } });});
+        sessionStorage.setItem('wi_pip', false);
+        wi_isread_yet = false;
+    } else if (sessionStorage.getItem('wi_pip') === 'false') {
+        if (window.wikiFq.checkWikifqDisplay('wi_pip',10,60,1.0) && wi_isread_yet) {
+            googletag.cmd.push(function() {googletag.setConfig({ targeting: { wi_fqgroup1: 'true' } });});
+            wi_isread_yet = false;
+        }
+    }
+} else if (!wi_ismobile && wi_group === 'N' && wi_agreement === 'false' && !wi_isinbound) {
+    (function () {
+        var gi = document.getElementById("pc-caption-ad-container");
+        gi.classList.add("default-advertisement");
+        if (gi.clientWidth > 610) {
+            if (gi.clientWidth < 769) {
+                gi.classList.add("pc-caption-ad-center");
+            } else {
+                gi.classList.add("pc-caption-ad-default");
+            }
+            if (window.wikiFq.checkWikifqDisplay('wi_fqgroup1',1,60,1.0) && wi_recref && (wi_recref.includes("google") || wi_recref.includes("yahoo")) || window.wikiFq.checkWikifqDisplay('wi_fqgroup2',1,60,0.2)) {
+                googletag.cmd.push(function() {googletag.setConfig({ targeting: { wi_fqgroup1: 'true' } });});
+                sessionStorage.setItem('wi_pip', false);
+            } else if (sessionStorage.getItem('wi_pip') === 'false') {
+                if (window.wikiFq.checkWikifqDisplay('wi_pip',10,60,1.0)) {
+                    googletag.cmd.push(function() {googletag.setConfig({ targeting: { wi_fqgroup1: 'true' } });});
+                }
+            }
+            defineSlotFlux.push({"slotID": "div-gpt-ad-1719748039754-0", "sizes": [[300,250]], "slotName":"WIKIWIKI_PC_CAPTION_SIDE_BY"});
+            googletag.cmd.push(function() {googletag.display('div-gpt-ad-1565253136679-0');});
+            googletag.cmd.push(function() {
+                googletag.defineSlot('/19033742/WIKIWIKI_PC_CAPTION_SIDE_BY',[[300,250],[1,1]],'div-gpt-ad-1719748039754-0').addService(googletag.pubads());
+                googletag.display('div-gpt-ad-1719748039754-0');});
+        }
+    })();
+}
+</script>
+<h3 id="h3_content_1_2" class="heading-after-first">一章  <a class="anchor_super" name ="cd915212"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=cd915212" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%A0%E3%81%AE%E6%B4%9E%E7%AA%9F" title="スライムの洞窟" class="rel-wiki-page">スライムの洞窟</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%A0" title="スライム" class="rel-wiki-page">スライム</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B9%B3%E5%8E%9F" title="平原" class="rel-wiki-page">平原</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%81%AD%E3%81%9A%E3%81%BF" title="大ねずみ" class="rel-wiki-page">大ねずみ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%82%AC%E3%83%A9%E3%82%B9" title="大ガラス" class="rel-wiki-page">大ガラス</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%A9%E3%83%BC%E3%82%A2%E3%83%B3%E3%83%88" title="キラーアント" class="rel-wiki-page">キラーアント</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B9%BF%E5%9C%B0" title="湿地" class="rel-wiki-page">湿地</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E6%AF%92%E3%82%AC%E3%82%A8%E3%83%AB" title="毒ガエル" class="rel-wiki-page">毒ガエル</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%82%B3%E3%82%A6%E3%83%A2%E3%83%AA" title="大コウモリ" class="rel-wiki-page">大コウモリ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%82%B0%E3%83%A2" title="大グモ" class="rel-wiki-page">大グモ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8F%E3%83%BC%E3%83%94%E3%82%A3" title="ハーピィ" class="rel-wiki-page">ハーピィ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%9A%B4%E3%82%8C%E9%A6%AC" title="暴れ馬" class="rel-wiki-page">暴れ馬</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%80%E3%82%A4%E3%82%A2%E3%82%A6%E3%83%AB%E3%83%95" title="ダイアウルフ" class="rel-wiki-page">ダイアウルフ</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%A3%AE%E6%9E%97" title="森林" class="rel-wiki-page">森林</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%90%B8%E8%A1%80%E3%81%93%E3%81%86%E3%82%82%E3%82%8A" title="吸血こうもり" class="rel-wiki-page">吸血こうもり</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%83%92%E3%83%AB" title="大ヒル" class="rel-wiki-page">大ヒル</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B4%E3%83%96%E3%83%AA%E3%83%B3" title="ゴブリン" class="rel-wiki-page">ゴブリン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B3%E3%83%A8%E3%83%BC%E3%83%86" title="コヨーテ" class="rel-wiki-page">コヨーテ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E5%9E%8B%E3%83%9E%E3%82%A4%E3%83%9E%E3%82%A4" title="大型マイマイ" class="rel-wiki-page">大型マイマイ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%A9%E3%83%BC%E3%83%9E%E3%83%B3%E3%83%86%E3%82%A3%E3%82%B9" title="キラーマンティス" class="rel-wiki-page">キラーマンティス</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B1%B1%E9%81%93" title="山道" class="rel-wiki-page">山道</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AA%E3%83%BC%E3%82%AF" title="オーク" class="rel-wiki-page">オーク</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%83%88%E3%82%AB%E3%82%B2" title="大トカゲ" class="rel-wiki-page">大トカゲ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%82%B6%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%83%E3%83%88" title="シザーキャット" class="rel-wiki-page">シザーキャット</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AF%E3%82%A4%E3%83%90%E3%83%BC%E3%83%B3" title="ワイバーン" class="rel-wiki-page">ワイバーン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%82%B3%E3%83%BC%E3%83%94%E3%82%AA" title="スコーピオ" class="rel-wiki-page">スコーピオ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%83%83%E3%82%AF%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ロックドラゴン" class="rel-wiki-page">ロックドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%82%B8%E3%83%88" title="アジト" class="rel-wiki-page">アジト</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%8A%E3%81%84%E3%81%AF%E3%81%8E" title="おいはぎ" class="rel-wiki-page">おいはぎ</a><!--/autolink--> (人型)</li>
+<li><a href="/guildmono2/%E3%83%92%E3%83%BC%E3%83%A9%E3%83%BC" title="ヒーラー" class="rel-wiki-page">ヒーラー</a> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%82%B8%E3%82%B7%E3%83%A3%E3%83%B3" title="マジシャン" class="rel-wiki-page">マジシャン</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E7%94%A8%E5%BF%83%E6%A3%92" title="用心棒" class="rel-wiki-page">用心棒</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%BB%83%E5%A2%9F" title="廃墟" class="rel-wiki-page">廃墟</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%BE%E3%83%B3%E3%83%93" title="ゾンビ" class="rel-wiki-page">ゾンビ</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%82%B1%E3%83%AB%E3%83%88%E3%83%B3" title="スケルトン" class="rel-wiki-page">スケルトン</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88" title="ゴースト" class="rel-wiki-page">ゴースト</a><!--/autolink--> (不死)</li>
+<li>★<a href="/guildmono2/%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="デーモン(モンスター)" class="rel-wiki-page">デーモン</a> (神魔)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A7%A5%E6%8D%A8%E5%B1%B1" title="姥捨山" class="rel-wiki-page">姥捨山</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%8C%96%E3%81%91%E7%8C%AB" title="化け猫" class="rel-wiki-page">化け猫</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E3%83%A0%E3%82%AB%E3%83%87" title="大ムカデ" class="rel-wiki-page">大ムカデ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B1%B1%E7%8A%AC" title="山犬" class="rel-wiki-page">山犬</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%B3%E3%82%A4%E3%83%BC%E3%82%BF%E3%83%BC" title="マンイーター" class="rel-wiki-page">マンイーター</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%95%E3%81%AE%E6%A3%AE" title="エルフの森" class="rel-wiki-page">エルフの森</a><!--/autolink-->
+<ul class="list2"><li><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%AB%E3%83%95%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ダークエルフ(モンスター)" class="rel-wiki-page">ダークエルフ</a> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%95%E3%82%A1%E3%82%A4%E3%82%BF%E3%83%BC" title="ダークファイター" class="rel-wiki-page">ダークファイター</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%BF%E3%83%A9%E3%83%B3%E3%83%81%E3%83%A5%E3%83%A9" title="タランチュラ" class="rel-wiki-page">タランチュラ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%89" title="ダークロード" class="rel-wiki-page">ダークロード</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%A5%E3%82%B1%E3%83%AB%E3%83%97%E6%B9%96" title="シュケルプ湖" class="rel-wiki-page">シュケルプ湖</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%B1%B1%E7%8D%85%E5%AD%90" title="山獅子" class="rel-wiki-page">山獅子</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%91%E3%83%94%E3%83%BC" title="ドラゴンパピー" class="rel-wiki-page">ドラゴンパピー</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%AD%BB%E9%A3%9F%E3%81%84%E9%B3%A5" title="死食い鳥" class="rel-wiki-page">死食い鳥</a><!--/autolink--> (魔物)</li>
+<li>★<a href="/guildmono2/%E3%82%B1%E3%83%AB%E3%83%94%E3%83%BC%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ケルピー(モンスター)" class="rel-wiki-page">ケルピー</a> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E7%9B%97%E8%B3%8A%E5%9B%A3" title="大盗賊団" class="rel-wiki-page">大盗賊団</a><!--/autolink-->
+<ul class="list2"><li><a href="/guildmono2/%E7%9B%97%E8%B3%8A%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="盗賊(モンスター)" class="rel-wiki-page">盗賊</a> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%82%AD%E5%85%B5" title="傭兵" class="rel-wiki-page">傭兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97" title="ビショップ" class="rel-wiki-page">ビショップ</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%83%E3%83%81%E3%83%A3%E3%83%BC" title="ブッチャー" class="rel-wiki-page">ブッチャー</a><!--/autolink--> (人型)</li></ul></li></ul>
+<h3 id="h3_content_1_3" class="heading-after-first">二章  <a class="anchor_super" name ="p404f572"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=p404f572" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E5%8F%A4%E9%A4%A8" title="古館" class="rel-wiki-page">古館</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%96%E3%83%8A%E3%83%B3%E3%83%88" title="レブナント" class="rel-wiki-page">レブナント</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%B4%E3%82%A1%E3%83%B3%E3%83%91%E3%82%A4%E3%82%A2%E3%83%90%E3%83%83%E3%83%88" title="ヴァンパイアバット" class="rel-wiki-page">ヴァンパイアバット</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%90%B8%E8%A1%80%E5%A5%B3" title="吸血女" class="rel-wiki-page">吸血女</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E5%90%B8%E8%A1%80%E9%AC%BC%E3%83%87%E3%82%A3%E3%82%AC%E3%83%BC%E3%83%AB" title="吸血鬼ディガール" class="rel-wiki-page">吸血鬼ディガール</a><!--/autolink--> (不死)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E7%9B%97%E8%B3%8A%E8%BF%8E%E6%92%83%E6%88%A6" title="盗賊迎撃戦" class="rel-wiki-page">盗賊迎撃戦</a><!--/autolink-->
+<ul class="list2"><li><a href="/guildmono2/%E3%83%96%E3%83%AD%E3%83%83%E3%83%96%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ブロッブ(モンスター)" class="rel-wiki-page">ブロッブ</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%81%BA%E8%B7%A1%E8%8D%92%E3%81%97" title="遺跡荒し" class="rel-wiki-page">遺跡荒し</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%83%9E%E3%83%BC%E3%83%8A%E3%82%A4%E3%83%88" title="アーマーナイト" class="rel-wiki-page">アーマーナイト</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B8%E3%82%A7%E3%82%A4%E3%83%89" title="ジェイド" class="rel-wiki-page">ジェイド</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B7%9D%E6%B2%BF%E3%81%84" title="川沿い" class="rel-wiki-page">川沿い</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E8%BB%8D%E9%9A%8A%E3%82%A2%E3%83%AA" title="軍隊アリ" class="rel-wiki-page">軍隊アリ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AA%E3%82%B6%E3%83%BC%E3%83%89%E3%83%9E%E3%83%B3" title="リザードマン" class="rel-wiki-page">リザードマン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%83%E3%83%95%E3%82%A1%E3%83%AD%E3%83%BC" title="バッファロー" class="rel-wiki-page">バッファロー</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%83%E3%82%AF%E3%82%B9" title="レックス" class="rel-wiki-page">レックス</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E9%98%B2%E8%A1%9B%E6%88%A6" title="帝都防衛戦" class="rel-wiki-page">帝都防衛戦</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%8F%E3%83%B3%E3%82%BF%E3%83%BC" title="ダークハンター" class="rel-wiki-page">ダークハンター</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%93%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97" title="ダークビショップ" class="rel-wiki-page">ダークビショップ</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%8A%E3%82%A4%E3%83%88" title="ダークナイト" class="rel-wiki-page">ダークナイト</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%AC%E3%82%AC" title="フレガ" class="rel-wiki-page">フレガ</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9B%E3%83%AB%E3%83%B3%E9%81%BA%E8%B7%A1" title="ホルン遺跡" class="rel-wiki-page">ホルン遺跡</a><!--/autolink-->
+<ul class="list2"><li><a href="/guildmono2/%E3%83%95%E3%83%A9%E3%82%A4%E3%83%B3%E3%82%B0%E3%82%BD%E3%83%BC%E3%83%89%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="フライングソード(モンスター)" class="rel-wiki-page">フライングソード</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%AC%BC%E3%82%B0%E3%83%A2" title="鬼グモ" class="rel-wiki-page">鬼グモ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E3%82%92%E9%80%99%E3%81%86%E3%82%82%E3%81%AE" title="地を這うもの" class="rel-wiki-page">地を這うもの</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%9A%E3%82%AF%E3%82%BF%E3%83%BC" title="スペクター" class="rel-wiki-page">スペクター</a><!--/autolink--> (不死)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%81%E3%82%A7%E3%82%B9%E9%81%BA%E8%B7%A1" title="マチェス遺跡" class="rel-wiki-page">マチェス遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E8%BB%9F%E4%BD%93%E7%94%9F%E7%89%A9" title="軟体生物" class="rel-wiki-page">軟体生物</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%81%E3%83%A5%E3%83%BC%E3%83%96" title="ブラックチューブ" class="rel-wiki-page">ブラックチューブ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%83%B3%E3%83%88%E3%83%A0" title="ファントム" class="rel-wiki-page">ファントム</a><!--/autolink--> (不死)</li>
+<li>★<a href="/guildmono2/%E3%83%9F%E3%83%8E%E3%82%BF%E3%82%A6%E3%83%AD%E3%82%B9%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ミノタウロス(モンスター)" class="rel-wiki-page">ミノタウロス</a> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%AB%E3%83%90%E9%81%BA%E8%B7%A1" title="ラルバ遺跡" class="rel-wiki-page">ラルバ遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E3%81%AE%E5%89%A3%E5%A3%AB" title="魏の剣士" class="rel-wiki-page">魏の剣士</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E3%81%AE%E5%83%A7%E5%85%B5" title="魏の僧兵" class="rel-wiki-page">魏の僧兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E3%81%AE%E9%9A%8A%E9%95%B7" title="魏の隊長" class="rel-wiki-page">魏の隊長</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%91%82%E5%B8%83" title="呂布" class="rel-wiki-page">呂布</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E8%B0%B7" title="竜の谷" class="rel-wiki-page">竜の谷</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%95%E3%83%A9%E3%82%A4" title="ドラゴンフライ" class="rel-wiki-page">ドラゴンフライ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E7%AB%9C" title="地竜" class="rel-wiki-page">地竜</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%95%E3%82%A9%E3%83%B3" title="グリフォン" class="rel-wiki-page">グリフォン</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%83%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="レッドドラゴン" class="rel-wiki-page">レッドドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1" title="氷雷山" class="rel-wiki-page">氷雷山</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%A9%E3%82%A4%E3%83%A4%E3%83%BC" title="フライヤー" class="rel-wiki-page">フライヤー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%83%83%E3%82%B0%E3%83%9B%E3%83%BC%E3%83%B3" title="ビッグホーン" class="rel-wiki-page">ビッグホーン</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB" title="トロール" class="rel-wiki-page">トロール</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%82%B9%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="アイスドラゴン" class="rel-wiki-page">アイスドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E4%B8%AD%E8%85%B9%EF%BC%89" title="氷雷山（中腹）" class="rel-wiki-page">氷雷山（中腹）</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%A9%E3%82%A4%E3%83%A4%E3%83%BC" title="フライヤー" class="rel-wiki-page">フライヤー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%83%83%E3%82%B0%E3%83%9B%E3%83%BC%E3%83%B3" title="ビッグホーン" class="rel-wiki-page">ビッグホーン</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB" title="トロール" class="rel-wiki-page">トロール</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%B3%E3%83%A2%E3%82%B9" title="マンモス" class="rel-wiki-page">マンモス</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%83%96%E3%83%AD%E3%83%83%E3%83%96" title="ホワイトブロッブ" class="rel-wiki-page">ホワイトブロッブ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="サンダードラゴン" class="rel-wiki-page">サンダードラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E5%B0%BE%E6%A0%B9%EF%BC%89" title="氷雷山（尾根）" class="rel-wiki-page">氷雷山（尾根）</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%A9%E3%82%A4%E3%83%A4%E3%83%BC" title="フライヤー" class="rel-wiki-page">フライヤー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%83%83%E3%82%B0%E3%83%9B%E3%83%BC%E3%83%B3" title="ビッグホーン" class="rel-wiki-page">ビッグホーン</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB" title="トロール" class="rel-wiki-page">トロール</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%B3%E3%83%A2%E3%82%B9" title="マンモス" class="rel-wiki-page">マンモス</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%B9%E3%82%AB%E3%83%83%E3%83%81%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サスカッチ(モンスター)" class="rel-wiki-page">サスカッチ</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%81%AF%E3%81%90%E3%82%8C%E5%B7%A8%E4%BA%BA" title="はぐれ巨人" class="rel-wiki-page">はぐれ巨人</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シルバードラゴン" class="rel-wiki-page">シルバードラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E9%A0%82%E4%B8%8A%EF%BC%89" title="氷雷山（頂上）" class="rel-wiki-page">氷雷山（頂上）</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%A9%E3%82%A4%E3%83%A4%E3%83%BC" title="フライヤー" class="rel-wiki-page">フライヤー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%83%83%E3%82%B0%E3%83%9B%E3%83%BC%E3%83%B3" title="ビッグホーン" class="rel-wiki-page">ビッグホーン</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AD%E3%83%BC%E3%83%AB" title="トロール" class="rel-wiki-page">トロール</a><!--/autolink--> (人型)</li>
+<li><a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%AA%E3%82%A6%E3%82%A3%E3%82%B9%E3%83%97%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ウィルオウィスプ(モンスター)" class="rel-wiki-page">ウィルオウィスプ</a> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%B3%E3%82%B0%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="キングドラゴン" class="rel-wiki-page">キングドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%BB%92%E9%9B%B2%E5%B1%B1" title="黒雲山" class="rel-wiki-page">黒雲山</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%90%E3%82%B8%E3%83%AA%E3%82%B9%E3%82%AF" title="バジリスク" class="rel-wiki-page">バジリスク</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%9F%B7%E8%A1%8C%E4%BA%BA" title="執行人" class="rel-wiki-page">執行人</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%82%B0%E3%83%9E%E3%83%96%E3%83%AD%E3%83%83%E3%83%96" title="マグマブロッブ" class="rel-wiki-page">マグマブロッブ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブラックドラゴン" class="rel-wiki-page">ブラックドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E4%B8%8B%E5%9D%91%E9%81%93" title="地下坑道" class="rel-wiki-page">地下坑道</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E5%A6%96%E7%B2%BE" title="地妖精" class="rel-wiki-page">地妖精</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B8%E3%83%A3%E3%83%83%E3%82%AF%E3%83%A9%E3%83%B3%E3%82%BF%E3%83%B3" title="ジャックランタン" class="rel-wiki-page">ジャックランタン</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%AF%E3%83%BC%E3%83%95%E6%88%A6%E5%A3%AB" title="ドワーフ戦士" class="rel-wiki-page">ドワーフ戦士</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グリーンドラゴン" class="rel-wiki-page">グリーンドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B9%96%E5%BA%95%E9%81%BA%E8%B7%A1" title="湖底遺跡" class="rel-wiki-page">湖底遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%80%E3%83%BC" title="アンダー" class="rel-wiki-page">アンダー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%A1%E3%82%A4%E3%82%B8%E3%82%B5%E3%83%8F%E3%82%AE%E3%83%B3" title="メイジサハギン" class="rel-wiki-page">メイジサハギン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B3%E3%83%BC%E3%83%97%E3%82%B9" title="コープス" class="rel-wiki-page">コープス</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E6%A9%9F%E6%A2%B0%E4%BA%BA%E5%BD%A2" title="機械人形" class="rel-wiki-page">機械人形</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E7%8D%A3%E3%81%AE%E6%A3%AE" title="魔獣の森" class="rel-wiki-page">魔獣の森</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E9%B9%BF" title="大鹿" class="rel-wiki-page">大鹿</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B7%A8%E5%A4%A7%E3%82%AB%E3%83%96%E3%83%88%E3%83%A0%E3%82%B7" title="巨大カブトムシ" class="rel-wiki-page">巨大カブトムシ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E8%8D%92%E3%81%B6%E3%82%8B%E7%89%9B" title="荒ぶる牛" class="rel-wiki-page">荒ぶる牛</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E9%8A%80%E7%8B%BC" title="銀狼" class="rel-wiki-page">銀狼</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E8%BF%B7%E3%81%84%E3%81%AE%E6%A3%AE" title="迷いの森" class="rel-wiki-page">迷いの森</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AC%E3%83%B3%E3%83%88" title="トレント" class="rel-wiki-page">トレント</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%82%A6%E3%83%AB%E3%83%95" title="ドラゴンウルフ" class="rel-wiki-page">ドラゴンウルフ</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B8%E3%83%A3%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%82%B4%E3%83%AA%E3%83%A9" title="ジャイアントゴリラ" class="rel-wiki-page">ジャイアントゴリラ</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E3%83%A6%E3%83%8B%E3%82%B3%E3%83%BC%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ユニコーン(モンスター)" class="rel-wiki-page">ユニコーン</a> (魔物)</li>
+<li>★<a href="/guildmono2/%E8%B8%8A%E3%82%8B%E4%BA%BA%E5%BD%A2%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="踊る人形(モンスター)" class="rel-wiki-page">踊る人形</a> (人型)</li></ul></li></ul>
+<h3 id="h3_content_1_4" class="heading-after-first">三章  <a class="anchor_super" name ="xe5385f6"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=xe5385f6" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E3%83%AD%E3%83%BC%E3%82%BA%E3%82%A6%E3%82%A7%E3%83%AB%E5%82%AD%E5%85%B5%E5%9B%A3" title="ローズウェル傭兵団" class="rel-wiki-page">ローズウェル傭兵団</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E9%87%8E%E7%9B%97" title="野盗" class="rel-wiki-page">野盗</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AD%E3%83%BC%E3%82%BA%E3%82%A6%E3%82%A7%E3%83%AB%E5%82%AD%E5%85%B5" title="ローズウェル傭兵" class="rel-wiki-page">ローズウェル傭兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E8%B3%9E%E9%87%91%E7%A8%BC%E3%81%8E" title="賞金稼ぎ" class="rel-wiki-page">賞金稼ぎ</a><!--/autolink--> (竜族)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E5%82%AD%E5%85%B5%E3%83%90%E3%83%83%E3%83%84%E3%82%A9" title="傭兵バッツォ" class="rel-wiki-page">傭兵バッツォ</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%83%9C%E3%83%BC%E3%82%B0%E7%A0%94%E7%A9%B6%E6%89%80" title="サイボーグ研究所" class="rel-wiki-page">サイボーグ研究所</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AC%E3%82%B9%E3%83%88" title="ガスト" class="rel-wiki-page">ガスト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AF%E3%82%A4%E3%83%88" title="ワイト" class="rel-wiki-page">ワイト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%AC%E3%82%A4%E3%83%A0" title="フレイム" class="rel-wiki-page">フレイム</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E6%AD%A3%E4%BD%93%E4%B8%8D%E6%98%8E" title="正体不明" class="rel-wiki-page">正体不明</a><!--/autolink--> (不死)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%91%82%E5%B8%83%E6%88%A6" title="呂布戦" class="rel-wiki-page">呂布戦</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E3%81%AE%E5%89%A3%E5%A3%AB" title="魏の剣士" class="rel-wiki-page">魏の剣士</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E3%81%AE%E5%83%A7%E5%85%B5" title="魏の僧兵" class="rel-wiki-page">魏の僧兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%BF%8D%E5%85%B5" title="忍兵" class="rel-wiki-page">忍兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AA%E3%83%BC%E3%83%88%E5%85%B5" title="エリート兵" class="rel-wiki-page">エリート兵</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%89%AF%E5%B0%86" title="副将" class="rel-wiki-page">副将</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%91%82%E5%B8%83" title="呂布" class="rel-wiki-page">呂布</a><!--/autolink--> (神魔)</strong></li></ul></li></ul>
+
+<div id="pc-caption-300x600-ad-container">
+<!-- /19033742/WIKIWIKI_SP_CAPTION_300x600 -->
+<div id='div-gpt-ad-1731135777754-0' class="hidden-switch-class"></div>
+</div><h3 id="h3_content_1_5" class="heading-after-first">四章  <a class="anchor_super" name ="t0bd1887"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=t0bd1887" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E3%83%92%E3%83%89%E3%83%A9%E7%81%AB%E5%B1%B1" title="ヒドラ火山" class="rel-wiki-page">ヒドラ火山</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AA%E3%82%AD%E3%83%A5%E3%83%9A%E3%83%86%E3%83%BC" title="オキュペテー" class="rel-wiki-page">オキュペテー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8F%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ハンタードラゴン" class="rel-wiki-page">ハンタードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%83%B3%E3%82%B0%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ファングドラゴン" class="rel-wiki-page">ファングドラゴン</a><!--/autolink--> (竜族)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%92%E3%83%89%E3%83%A9" title="ヒドラ" class="rel-wiki-page">ヒドラ</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B3%E3%83%AD%E3%82%B7%E3%82%A2%E3%83%A0" title="コロシアム" class="rel-wiki-page">コロシアム</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%98%E3%83%AB%E3%82%B3%E3%83%B3%E3%83%89%E3%83%AB" title="ヘルコンドル" class="rel-wiki-page">ヘルコンドル</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%AC%BC%E3%83%88%E3%82%AB%E3%82%B2" title="鬼トカゲ" class="rel-wiki-page">鬼トカゲ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AC%E3%83%BC%E3%82%B4%E3%82%A4%E3%83%AB" title="ガーゴイル" class="rel-wiki-page">ガーゴイル</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%98%E3%83%A9%E3%82%AF%E3%83%AC%E3%82%B9" title="ヘラクレス" class="rel-wiki-page">ヘラクレス</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B8%E3%83%BC%E3%82%AF%E3%83%95%E3%83%AA%E3%83%BC%E3%83%88" title="ジークフリート" class="rel-wiki-page">ジークフリート</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%90%E3%83%8E%E3%83%B3%E3%81%AE%E6%A3%AE" title="レバノンの森" class="rel-wiki-page">レバノンの森</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%A9%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%B3%E3%82%B5%E3%83%BC" title="キラーキャンサー" class="rel-wiki-page">キラーキャンサー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%A9%E3%83%83%E3%83%89%E3%83%99%E3%83%AA%E3%83%BC" title="ブラッドベリー" class="rel-wiki-page">ブラッドベリー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%96%E3%83%AD%E3%83%83%E3%83%96" title="グリーンブロッブ" class="rel-wiki-page">グリーンブロッブ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%B3%E3%83%90%E3%83%90" title="フンババ" class="rel-wiki-page">フンババ</a><!--/autolink--> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%AE%E3%83%AB%E3%82%AC%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5" title="ギルガメッシュ" class="rel-wiki-page">ギルガメッシュ</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%AD%E3%83%89%E3%82%A5%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="エンキドゥ(モンスター)" class="rel-wiki-page">エンキドゥ</a> (魔物)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%8D%E3%82%B9%E9%A0%98" title="アマゾネス領" class="rel-wiki-page">アマゾネス領</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%8D%E3%82%B9%E6%88%A6%E5%A3%AB" title="アマゾネス戦士" class="rel-wiki-page">アマゾネス戦士</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%87%E3%82%A3%E3%83%8A%E3%82%A4%E3%83%88" title="レディナイト" class="rel-wiki-page">レディナイト</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%B4%E3%82%A1%E3%83%AB%E3%82%AD%E3%83%AA%E3%83%BC" title="ヴァルキリー" class="rel-wiki-page">ヴァルキリー</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%AA%E3%82%A2%E3%83%B3%E3%83%AD%E3%83%83%E3%83%89" title="アリアンロッド" class="rel-wiki-page">アリアンロッド</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%AB%E3%82%B8%E3%83%A5%E3%83%8A" title="アルジュナ" class="rel-wiki-page">アルジュナ</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8E%E3%83%BC%E3%83%A0%E9%A0%98" title="ノーム領" class="rel-wiki-page">ノーム領</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%83%A7%E6%88%A6%E5%A3%AB" title="僧戦士" class="rel-wiki-page">僧戦士</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8E%E3%83%BC%E3%83%A0%E3%83%8A%E3%82%A4%E3%83%88" title="ノームナイト" class="rel-wiki-page">ノームナイト</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%A3%E3%83%BC%E3%83%9E%E3%83%B3" title="シャーマン" class="rel-wiki-page">シャーマン</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%A8%E3%82%AE%E3%83%AB%E3%83%BB%E3%82%AC%E3%82%AE%E3%83%AB" title="エギル・ガギル" class="rel-wiki-page">エギル・ガギル</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AF%E3%83%AD%E3%83%8E%E3%82%B9%E7%A5%9E%E6%AE%BF" title="クロノス神殿" class="rel-wiki-page">クロノス神殿</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%BD%E3%83%BC%E3%83%89%E3%83%AD%E3%82%A4%E3%83%89" title="ソードロイド" class="rel-wiki-page">ソードロイド</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AC%E3%83%88%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%BF%E3%83%B3%E3%82%AF" title="ガトリングタンク" class="rel-wiki-page">ガトリングタンク</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%81%E3%82%A7%E3%82%A4%E3%82%B5%E3%83%BC%E3%82%AC%E3%83%BC%E3%83%89" title="チェイサーガード" class="rel-wiki-page">チェイサーガード</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%AF%E3%83%AD%E3%83%8E%E3%82%B9%E5%85%B5" title="クロノス兵" class="rel-wiki-page">クロノス兵</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E6%A3%AE%E6%9E%97%E3%81%AE%E6%B1%BA%E6%88%A6" title="大森林の決戦" class="rel-wiki-page">大森林の決戦</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%8A%E5%8C%96%E3%81%91%E3%82%AB%E3%82%BA%E3%83%A9" title="お化けカズラ" class="rel-wiki-page">お化けカズラ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%A9%BA%E9%A3%9B%E3%81%B6%E5%BA%A7%E5%B8%83%E5%9B%A3" title="空飛ぶ座布団" class="rel-wiki-page">空飛ぶ座布団</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%9B%B7%E7%B2%BE" title="雷精" class="rel-wiki-page">雷精</a><!--/autolink--> (魔物)</li>
+<li>★<a href="/guildmono2/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%89%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サンダーバード(モンスター)" class="rel-wiki-page">サンダーバード</a> (魔物)</li></ul></li></ul>
+<h3 id="h3_content_1_6" class="heading-after-first">五章  <a class="anchor_super" name ="i15f5df3"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=i15f5df3" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E7%A9%BA%E4%B8%AD%E9%81%BA%E8%B7%A1" title="空中遺跡" class="rel-wiki-page">空中遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%A1%E3%82%AB%E3%83%AF%E3%82%A4%E3%83%90%E3%83%BC%E3%83%B3" title="メカワイバーン" class="rel-wiki-page">メカワイバーン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%A9%BA%E3%81%AE%E7%95%AA%E4%BA%BA" title="空の番人" class="rel-wiki-page">空の番人</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%82%AB%E3%82%A4%E3%83%96%E3%83%AD%E3%83%83%E3%83%96" title="スカイブロッブ" class="rel-wiki-page">スカイブロッブ</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E5%A4%A9%E7%A9%BA%E6%A9%9F%E6%A2%B0%E7%AB%9C" title="天空機械竜" class="rel-wiki-page">天空機械竜</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8D%E3%82%A2%E6%B9%96" title="ネア湖" class="rel-wiki-page">ネア湖</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%A1%E3%82%A4%E3%82%B8%E3%82%B5%E3%83%8F%E3%82%AE%E3%83%B3" title="メイジサハギン" class="rel-wiki-page">メイジサハギン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B5%E3%83%BC%E3%83%9A%E3%83%B3%E3%83%88" title="サーペント" class="rel-wiki-page">サーペント</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シードラゴン" class="rel-wiki-page">シードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E4%BA%80" title="竜亀" class="rel-wiki-page">竜亀</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E5%B9%B3%E5%8E%9F" title="大平原" class="rel-wiki-page">大平原</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%83%E3%83%95%E3%82%A1%E3%83%AD%E3%83%BC" title="バッファロー" class="rel-wiki-page">バッファロー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B7%A8%E5%A4%A7%E7%94%9F%E7%89%A9" title="巨大生物" class="rel-wiki-page">巨大生物</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%88%E3%83%AA%E3%82%B1%E3%83%A9%E3%83%88%E3%83%97%E3%82%B9" title="トリケラトプス" class="rel-wiki-page">トリケラトプス</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%81%90%E7%AB%9C" title="恐竜" class="rel-wiki-page">恐竜</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E7%8B%A9%E3%82%8A%E5%A0%B4" title="竜の狩り場" class="rel-wiki-page">竜の狩り場</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E7%AB%9C" title="地竜" class="rel-wiki-page">地竜</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%AD%E3%83%B3%E3%82%BA%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブロンズドラゴン" class="rel-wiki-page">ブロンズドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グレートドラゴン" class="rel-wiki-page">グレートドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%97%E3%83%AA%E3%83%B3%E3%82%B9" title="ドラゴンプリンス" class="rel-wiki-page">ドラゴンプリンス</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%8B%E3%82%A2%E3%83%B3%E7%8E%8B" title="ドラゴニアン王" class="rel-wiki-page">ドラゴニアン王</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%8F%E7%8E%8B%E5%AE%AE" title="魏王宮" class="rel-wiki-page">魏王宮</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%BC%E3%83%AB" title="グール" class="rel-wiki-page">グール</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A5%B3%E5%BF%8D%E8%80%85" title="女忍者" class="rel-wiki-page">女忍者</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A5%B3%E4%BE%8D" title="女侍" class="rel-wiki-page">女侍</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B7%AB%E5%A5%B3" title="巫女" class="rel-wiki-page">巫女</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%BC%81%E6%85%B6" title="弁慶" class="rel-wiki-page">弁慶</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E7%89%9B%E8%8B%A5%E4%B8%B8" title="牛若丸" class="rel-wiki-page">牛若丸</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E4%B8%8E%E4%B8%80" title="与一" class="rel-wiki-page">与一</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<a href="/guildmono2/%E7%81%AB%E3%83%8E%E9%B3%A5%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="火ノ鳥(モンスター)" class="rel-wiki-page">火ノ鳥</a> (魔物)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%8D%91%E5%BC%A5%E5%91%BC" title="卑弥呼" class="rel-wiki-page">卑弥呼</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%BB%84%E5%B1%B1" title="黄山" class="rel-wiki-page">黄山</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E7%86%8A%E7%8C%AB" title="熊猫" class="rel-wiki-page">熊猫</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%8C%9B%E8%99%8E" title="猛虎" class="rel-wiki-page">猛虎</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E9%BE%8D" title="龍" class="rel-wiki-page">龍</a> (竜族)</li>
+<li><strong>◆<a href="/guildmono2/%E3%82%AD%E3%83%AA%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="キリン(モンスター)" class="rel-wiki-page">キリン</a> (魔物)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%BB%84%E9%87%91%E5%AE%AE%E6%AE%BF" title="黄金宮殿" class="rel-wiki-page">黄金宮殿</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%9C%B0%E5%BA%95%E6%88%A6%E5%A3%AB" title="地底戦士" class="rel-wiki-page">地底戦士</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%AF%E3%83%BC%E3%83%95%E5%83%A7%E4%BE%B6" title="ドワーフ僧侶" class="rel-wiki-page">ドワーフ僧侶</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B4%E3%83%BC%E3%83%AB%E3%83%89%E3%83%8A%E3%82%A4%E3%83%88" title="ゴールドナイト" class="rel-wiki-page">ゴールドナイト</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グリーンドラゴン" class="rel-wiki-page">グリーンドラゴン</a><!--/autolink--> (竜族)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B8%E3%83%A5%E3%82%A8%E3%83%AB%E3%83%93%E3%83%BC%E3%82%B9%E3%83%88" title="ジュエルビースト" class="rel-wiki-page">ジュエルビースト</a><!--/autolink--> (魔物)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%AE%E3%83%AB%E3%82%AC%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5" title="ギルガメッシュ" class="rel-wiki-page">ギルガメッシュ</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%9B%AA%E5%B1%B1%E3%81%AE%E6%88%A6%E3%81%84" title="雪山の戦い" class="rel-wiki-page">雪山の戦い</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%83%96%E3%83%AD%E3%83%83%E3%83%96" title="ホワイトブロッブ" class="rel-wiki-page">ホワイトブロッブ</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%B9%E3%82%AB%E3%83%83%E3%83%81%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サスカッチ(モンスター)" class="rel-wiki-page">サスカッチ</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%B3%E3%83%A2%E3%82%B9" title="マンモス" class="rel-wiki-page">マンモス</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%A3%E3%83%89%E3%82%A6%E3%82%B5%E3%83%BC%E3%83%9A%E3%83%B3%E3%83%88" title="シャドウサーペント" class="rel-wiki-page">シャドウサーペント</a><!--/autolink--> (魔物)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%AC%E3%83%95%E3%82%A3%E3%83%A0%E3%81%AE%E4%B8%98" title="マレフィムの丘" class="rel-wiki-page">マレフィムの丘</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AA%E3%83%AB%E3%83%88%E3%83%AD%E3%82%B9" title="オルトロス" class="rel-wiki-page">オルトロス</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%82%A8%E3%83%AD%E3%83%BC" title="アエロー" class="rel-wiki-page">アエロー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="エンジェル" class="rel-wiki-page">エンジェル</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%99%E3%83%AB%E3%83%95%E3%82%A1%E3%82%B4%E3%83%BC%E3%83%AB" title="ベルファゴール" class="rel-wiki-page">ベルファゴール</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%AD%BB%E7%A5%9E%E3%81%AE%E9%81%BA%E8%B7%A1" title="死神の遺跡" class="rel-wiki-page">死神の遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%94%E3%83%AA%E3%83%83%E3%83%88" title="スピリット" class="rel-wiki-page">スピリット</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%95" title="シルフ" class="rel-wiki-page">シルフ</a><!--/autolink--> (不死)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%82%B3%E3%83%89%E3%83%83%E3%82%B0%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サイコドッグ(モンスター)" class="rel-wiki-page">サイコドッグ</a> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B9%E3%82%B1%E3%83%AB%E3%83%88%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0" title="スケルトンキング" class="rel-wiki-page">スケルトンキング</a><!--/autolink--> (不死)</li></ul></li></ul>
+<h3 id="h3_content_1_7" class="heading-after-first">六章  <a class="anchor_super" name ="d4264a42"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=d4264a42" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E5%A5%B4%E9%9A%B7%E7%AB%B6%E4%BA%89" title="奴隷競争" class="rel-wiki-page">奴隷競争</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%A9%E3%83%83%E3%83%89%E3%83%99%E3%83%AA%E3%83%BC" title="ブラッドベリー" class="rel-wiki-page">ブラッドベリー</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%81%8A%E5%8C%96%E3%81%91%E3%82%AB%E3%82%BA%E3%83%A9" title="お化けカズラ" class="rel-wiki-page">お化けカズラ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%A9%BA%E9%A3%9B%E3%81%B6%E5%BA%A7%E5%B8%83%E5%9B%A3" title="空飛ぶ座布団" class="rel-wiki-page">空飛ぶ座布団</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%97%E3%83%AA%E3%83%B3%E3%82%B9" title="ドラゴンプリンス" class="rel-wiki-page">ドラゴンプリンス</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%82%AD%E3%83%83%E3%82%AF%E5%8F%8E%E5%AE%B9%E6%89%80" title="サイキック収容所" class="rel-wiki-page">サイキック収容所</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E5%85%B5" title="帝国兵" class="rel-wiki-page">帝国兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E9%AD%94%E9%81%93%E5%85%B5" title="帝国魔道兵" class="rel-wiki-page">帝国魔道兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A5%B4%E9%9A%B7%E3%82%A6%E3%83%AB%E3%83%95" title="奴隷ウルフ" class="rel-wiki-page">奴隷ウルフ</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%AA%E3%82%A2%E3%83%AB%E3%82%AC%E3%83%BC%E3%83%89" title="インペリアルガード" class="rel-wiki-page">インペリアルガード</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%BB%85%E3%81%B3%E3%81%AE%E7%94%BA" title="滅びの町" class="rel-wiki-page">滅びの町</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E6%AD%BB%E9%A3%9F%E3%81%84%E7%8A%AC" title="死食い犬" class="rel-wiki-page">死食い犬</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%BA%E9%AD%82" title="人魂" class="rel-wiki-page">人魂</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%87%E3%83%83%E3%83%89%E3%83%8A%E3%82%A4%E3%83%88" title="アンデッドナイト" class="rel-wiki-page">アンデッドナイト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AF%E3%82%A4%E3%83%AB%E3%83%89%E3%82%A6%E3%83%BC%E3%83%9E%E3%83%B3" title="ワイルドウーマン" class="rel-wiki-page">ワイルドウーマン</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%B4%E3%82%A3%E3%83%B4%E3%82%A3%E3%82%A2%E3%83%B3%E3%83%BB%E3%83%9E%E3%83%BC%E3%82%B7%E3%83%A5" title="ヴィヴィアン・マーシュ" class="rel-wiki-page">ヴィヴィアン・マーシュ</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E6%B9%96%E7%AB%9C" title="湖竜" class="rel-wiki-page">湖竜</a><!--/autolink-->（竜族）</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%BC%E3%83%A1%E3%82%A4%E3%83%89" title="マーメイド" class="rel-wiki-page">マーメイド</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B5%E3%83%8F%E3%82%AE%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0" title="サハギンキング" class="rel-wiki-page">サハギンキング</a><!--/autolink--> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B8%E3%83%BC%E3%82%AF%E3%83%95%E3%83%AA%E3%83%BC%E3%83%88" title="ジークフリート" class="rel-wiki-page">ジークフリート</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AE%E3%83%AB%E3%83%89%E9%98%B2%E8%A1%9B%E6%88%A6" title="ギルド防衛戦" class="rel-wiki-page">ギルド防衛戦</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E9%87%8D%E6%A7%8D%E5%85%B5" title="重槍兵" class="rel-wiki-page">重槍兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E9%A8%8E%E5%85%B5" title="帝国騎兵" class="rel-wiki-page">帝国騎兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%82%8E%E8%A1%93%E5%B8%AB" title="炎術師" class="rel-wiki-page">炎術師</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E6%8C%87%E6%8F%AE%E5%AE%98" title="帝国指揮官" class="rel-wiki-page">帝国指揮官</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A9%E4%BD%BF%E8%A5%B2%E6%9D%A5" title="天使襲来" class="rel-wiki-page">天使襲来</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="エンジェル" class="rel-wiki-page">エンジェル</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB%E3%83%8A%E3%82%A4%E3%83%88" title="エンジェルナイト" class="rel-wiki-page">エンジェルナイト</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="アークエンジェル" class="rel-wiki-page">アークエンジェル</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%97%E3%83%AD%E3%83%86%E3%82%AF%E3%82%BF%E3%83%BC" title="プロテクター" class="rel-wiki-page">プロテクター</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E4%B8%BB%E5%A4%A9%E4%BD%BF%E3%83%89%E3%83%9F%E3%83%8B%E3%82%AA%E3%83%B3" title="主天使ドミニオン" class="rel-wiki-page">主天使ドミニオン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%8A%9B%E5%A4%A9%E4%BD%BF%E3%83%B4%E3%82%A1%E3%83%BC%E3%83%81%E3%83%A3%E3%83%BC" title="力天使ヴァーチャー" class="rel-wiki-page">力天使ヴァーチャー</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AB%E3%83%8A%E3%82%A4%E3%83%84" title="テンプルナイツ" class="rel-wiki-page">テンプルナイツ</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%95%E3%83%8A%E3%82%A4%E3%83%88" title="エルフナイト" class="rel-wiki-page">エルフナイト</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AB%E3%83%8A%E3%82%A4%E3%83%88" title="テンプルナイト" class="rel-wiki-page">テンプルナイト</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8F%E3%82%A4%E3%83%97%E3%83%AA%E3%83%BC%E3%82%B9%E3%83%88" title="ハイプリースト" class="rel-wiki-page">ハイプリースト</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%AA%E3%82%A2%E3%83%AB%E3%82%AC%E3%83%BC%E3%83%89" title="インペリアルガード" class="rel-wiki-page">インペリアルガード</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E8%81%96%E9%A8%8E%E5%A3%AB%E3%83%AA%E3%83%81%E3%83%A3%E3%83%BC%E3%83%89" title="聖騎士リチャード" class="rel-wiki-page">聖騎士リチャード</a><!--/autolink--> (人型)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E7%A5%9E%E6%AE%BF" title="大神殿" class="rel-wiki-page">大神殿</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E6%9A%97%E9%BB%92%E5%8F%B8%E7%A5%AD" title="暗黒司祭" class="rel-wiki-page">暗黒司祭</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%A5%9E%E6%AE%BF%E3%82%AC%E3%83%BC%E3%83%87%E3%82%A3%E3%82%A2%E3%83%B3" title="神殿ガーディアン" class="rel-wiki-page">神殿ガーディアン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BB%E3%82%B9" title="ダークプリンセス" class="rel-wiki-page">ダークプリンセス</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%95%E3%82%A9%E3%83%A1%E3%83%83%E3%83%88" title="バフォメット" class="rel-wiki-page">バフォメット</a><!--/autolink--> (神魔)</strong></li></ul></li></ul>
+<h3 id="h3_content_1_8" class="heading-after-first">七章  <a class="anchor_super" name ="z6cac9bc"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=z6cac9bc" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E8%A5%B2%E6%92%83" title="ドラゴン襲撃" class="rel-wiki-page">ドラゴン襲撃</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%93%E3%83%83%E3%82%B0%E3%83%AF%E3%82%A4%E3%83%90%E3%83%BC%E3%83%B3" title="ビッグワイバーン" class="rel-wiki-page">ビッグワイバーン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AA%E3%83%B3%E3%83%89%E3%83%96%E3%83%AB%E3%83%A0" title="リンドブルム" class="rel-wiki-page">リンドブルム</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ウィンドドラゴン" class="rel-wiki-page">ウィンドドラゴン</a><!--/autolink--> (竜族)</li>
+<li>★<a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ミストドラゴン(モンスター)" class="rel-wiki-page">ミストドラゴン</a> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%A4%E6%98%93%E5%95%86%E9%9A%8A" title="交易商隊" class="rel-wiki-page">交易商隊</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%BC%E3%83%AB" title="グール" class="rel-wiki-page">グール</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%81%95%E3%81%BE%E3%82%88%E3%81%86%E6%AD%BB%E4%BD%93" title="さまよう死体" class="rel-wiki-page">さまよう死体</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%AD%E3%83%B3%E3%82%BA%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブロンズドラゴン" class="rel-wiki-page">ブロンズドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グレートドラゴン" class="rel-wiki-page">グレートドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E4%BA%80" title="竜亀" class="rel-wiki-page">竜亀</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="サンダードラゴン" class="rel-wiki-page">サンダードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%A9%E3%83%83%E3%82%AF%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブラックドラゴン" class="rel-wiki-page">ブラックドラゴン</a><!--/autolink--> (竜族)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%89%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サンダーバード(モンスター)" class="rel-wiki-page">サンダーバード</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="アークエンジェル" class="rel-wiki-page">アークエンジェル</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B8%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BC" title="ジェスター" class="rel-wiki-page">ジェスター</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B0%B7%E3%81%AE%E5%B7%A8%E4%BA%BA" title="氷の巨人" class="rel-wiki-page">氷の巨人</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%8A%E3%82%B8%E3%83%BC%E3%83%9F%E3%82%B9%E3%83%88" title="エナジーミスト" class="rel-wiki-page">エナジーミスト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%B3%E3%82%B7%E3%83%BC" title="バンシー" class="rel-wiki-page">バンシー</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%86%E3%83%A9%E3%83%BC%E3%83%9E%E3%83%9F%E3%83%BC" title="テラーマミー" class="rel-wiki-page">テラーマミー</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%95%E3%83%AD%E3%82%B9%E3%83%88%E3%82%B8%E3%83%A3%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88" title="フロストジャイアント" class="rel-wiki-page">フロストジャイアント</a><!--/autolink--> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%90%B8%E8%A1%80%E9%AC%BC%E8%A8%8E%E4%BC%90" title="吸血鬼討伐" class="rel-wiki-page">吸血鬼討伐</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%A0%E3%83%97%E3%83%BC%E3%82%B5" title="エムプーサ" class="rel-wiki-page">エムプーサ</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%A9%E3%83%9F%E3%82%A2" title="ラミア" class="rel-wiki-page">ラミア</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8E%E3%82%B9%E3%83%95%E3%82%A1%E3%83%A9%E3%83%88%E3%82%A5" title="ノスファラトゥ" class="rel-wiki-page">ノスファラトゥ</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BB%E3%82%B9" title="ダークプリンセス" class="rel-wiki-page">ダークプリンセス</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%B4%E3%82%A1%E3%83%B3%E3%83%91%E3%82%A4%E3%82%A2%E3%83%AD%E3%83%BC%E3%83%89" title="ヴァンパイアロード" class="rel-wiki-page">ヴァンパイアロード</a><!--/autolink--> (不死)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%8C%97%E6%96%B9%E3%81%AE%E5%9C%B0%E4%B8%8B%E9%81%BA%E8%B7%A1" title="北方の地下遺跡" class="rel-wiki-page">北方の地下遺跡</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%94%E3%83%AA%E3%83%83%E3%83%88" title="スピリット" class="rel-wiki-page">スピリット</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%95" title="シルフ" class="rel-wiki-page">シルフ</a><!--/autolink--> (不死)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%82%B3%E3%83%89%E3%83%83%E3%82%B0%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サイコドッグ(モンスター)" class="rel-wiki-page">サイコドッグ</a> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%82%A6%E3%83%AB%E3%83%95" title="ドラゴンウルフ" class="rel-wiki-page">ドラゴンウルフ</a><!--/autolink--> (竜族)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B9%E3%82%AB%E3%83%AB%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="スカルドラゴン" class="rel-wiki-page">スカルドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%8F%A4%E4%BB%A3%E3%82%A8%E3%83%AB%E3%83%95%E3%81%AE%E5%AF%BA%E9%99%A2" title="古代エルフの寺院" class="rel-wiki-page">古代エルフの寺院</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E6%A3%AE%E3%81%AE%E6%9A%97%E6%AE%BA%E8%80%85" title="森の暗殺者" class="rel-wiki-page">森の暗殺者</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%91%AA%E8%A1%93%E5%B8%AB" title="呪術師" class="rel-wiki-page">呪術師</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%BB%92%E8%A1%A3%E9%A8%8E%E5%A3%AB" title="黒衣騎士" class="rel-wiki-page">黒衣騎士</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BB%E3%82%B9" title="ダークプリンセス" class="rel-wiki-page">ダークプリンセス</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%87%E3%83%A2%E3%83%B3%E3%82%BA%E3%83%93%E3%83%BC%E3%82%B9%E3%83%88" title="デモンズビースト" class="rel-wiki-page">デモンズビースト</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B9" title="アンドラス" class="rel-wiki-page">アンドラス</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%82%AA%E9%AD%94%E3%81%AE%E6%8C%87%E6%8F%AE%E5%AE%98" title="悪魔の指揮官" class="rel-wiki-page">悪魔の指揮官</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%83%E3%82%B5%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="レッサーデーモン" class="rel-wiki-page">レッサーデーモン</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8E%E3%82%B9%E3%83%95%E3%82%A1%E3%83%A9%E3%83%88%E3%82%A5" title="ノスファラトゥ" class="rel-wiki-page">ノスファラトゥ</a><!--/autolink--> (不死)</li>
+<li>★<a href="/guildmono2/%E3%82%B5%E3%82%AD%E3%83%A5%E3%83%90%E3%82%B9%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サキュバス(モンスター)" class="rel-wiki-page">サキュバス</a> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%87%E3%83%A5%E3%83%A9%E3%83%8F%E3%83%B3" title="デュラハン" class="rel-wiki-page">デュラハン</a><!--/autolink--> (人型)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%95%E3%82%A3%E3%83%B3%E3%82%AF%E3%82%B9" title="スフィンクス" class="rel-wiki-page">スフィンクス</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%82%A2" title="ロア" class="rel-wiki-page">ロア</a><!--/autolink--> (不死)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%AB%E3%82%B3%E3%82%AD%E3%82%A2%E3%82%B9" title="マルコキアス" class="rel-wiki-page">マルコキアス</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E8%B7%A1%E5%9C%B0" title="帝都跡地" class="rel-wiki-page">帝都跡地</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%BC%E3%83%AB" title="グール" class="rel-wiki-page">グール</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%87%E3%83%83%E3%83%89%E3%83%8A%E3%82%A4%E3%83%88" title="アンデッドナイト" class="rel-wiki-page">アンデッドナイト</a><!--/autolink--> (不死)</li>
+<li>★<a href="/guildmono2/%E3%83%AA%E3%83%83%E3%83%81%E3%83%BC%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="リッチー(モンスター)" class="rel-wiki-page">リッチー</a> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8D%E3%82%AF%E3%83%AD%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="ネクロデーモン" class="rel-wiki-page">ネクロデーモン</a><!--/autolink--> (不死)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E6%A0%B8%E6%AD%A6%E8%A3%85%E3%82%B4%E3%83%BC%E3%83%AC%E3%83%A0" title="核武装ゴーレム" class="rel-wiki-page">核武装ゴーレム</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="アークデーモン" class="rel-wiki-page">アークデーモン</a><!--/autolink--> (神魔)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%82%AC%E3%83%AB%E3%83%89%E6%8E%A2%E7%B4%A2" title="ミストガルド探索" class="rel-wiki-page">ミストガルド探索</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%95%E3%81%BE%E3%82%88%E3%81%86%E6%AD%BB%E4%BD%93" title="さまよう死体" class="rel-wiki-page">さまよう死体</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88" title="ミストゴースト" class="rel-wiki-page">ミストゴースト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%83%E3%82%B5%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="レッサーデーモン" class="rel-wiki-page">レッサーデーモン</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シードラゴン" class="rel-wiki-page">シードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シルバードラゴン" class="rel-wiki-page">シルバードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B7%E3%82%A7%E3%83%B3%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="エンシェントドラゴン" class="rel-wiki-page">エンシェントドラゴン</a><!--/autolink--> (竜族)</li>
+<li><a href="/guildmono2/%E3%82%BF%E3%82%A4%E3%82%BF%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="タイタン(モンスター)" class="rel-wiki-page">タイタン</a> (人型)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%91%E3%83%B3%E3%83%87%E3%83%A2%E3%83%8B%E3%82%A6%E3%83%A0" title="パンデモニウム" class="rel-wiki-page">パンデモニウム</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%AE%88%E8%AD%B7%E7%AB%9C%E5%85%B5" title="守護竜兵" class="rel-wiki-page">守護竜兵</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%87%8D%E8%A3%85%E7%94%B2%E5%85%B5" title="重装甲兵" class="rel-wiki-page">重装甲兵</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%AB%E3%83%95%E3%82%A1" title="アルファ" class="rel-wiki-page">アルファ</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E8%A6%81%E5%A1%9E%E7%AB%9C" title="要塞竜" class="rel-wiki-page">要塞竜</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グリーンドラゴン" class="rel-wiki-page">グリーンドラゴン</a><!--/autolink--> (竜族)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%82%A4%E3%82%A2%E3%83%BC%E3%83%89%E3%83%AC%E3%82%A4%E3%82%AF" title="ファイアードレイク" class="rel-wiki-page">ファイアードレイク</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E7%8E%8B%E5%9F%8E" title="魔王城" class="rel-wiki-page">魔王城</a><!--/autolink-->
+<ul class="list2"><li><a href="/guildmono2/%E3%83%87%E3%82%B9%E3%83%8A%E3%82%A4%E3%83%88%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="デスナイト(モンスター)" class="rel-wiki-page">デスナイト</a> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%82%A6%E3%82%A3%E3%82%B6%E3%83%BC%E3%83%89" title="アークウィザード" class="rel-wiki-page">アークウィザード</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B0%E3%83%BC%E3%83%B3" title="ドラグーン" class="rel-wiki-page">ドラグーン</a><!--/autolink--> (竜族)</li>
+<li><strong>◆<a href="/guildmono2/%E3%83%97%E3%83%A9%E3%82%A4%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="プライドドラゴン(モンスター)" class="rel-wiki-page">プライドドラゴン</a> (竜族)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%9B%9B%E7%BF%BC%E3%81%AE%E6%82%AA%E9%AD%94" title="四翼の悪魔" class="rel-wiki-page">四翼の悪魔</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BA" title="魔宮殿の地下A" class="rel-wiki-page">魔宮殿の地下A</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E6%88%A6%29" title="エルダー(戦)" class="rel-wiki-page">エルダー(戦)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%90%9B%29" title="エルダー(君)" class="rel-wiki-page">エルダー(君)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%83%A7%29" title="エルダー(僧)" class="rel-wiki-page">エルダー(僧)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%BA%E9%AD%82" title="人魂" class="rel-wiki-page">人魂</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%BC%E3%82%A6%E3%82%B9%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="ゼウス・クローン" class="rel-wiki-page">ゼウス・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BB" title="魔宮殿の地下B" class="rel-wiki-page">魔宮殿の地下B</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E9%AD%94%29" title="エルダー(魔)" class="rel-wiki-page">エルダー(魔)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E4%BE%8D%29" title="エルダー(侍)" class="rel-wiki-page">エルダー(侍)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E8%81%96%29" title="エルダー(聖)" class="rel-wiki-page">エルダー(聖)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%BA%E9%AD%82" title="人魂" class="rel-wiki-page">人魂</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%9F%E3%82%AB%E3%82%A8%E3%83%AB%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="ミカエル・クローン" class="rel-wiki-page">ミカエル・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BC" title="魔宮殿の地下C" class="rel-wiki-page">魔宮殿の地下C</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E6%88%A6%29" title="エルダー(戦)" class="rel-wiki-page">エルダー(戦)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%90%9B%29" title="エルダー(君)" class="rel-wiki-page">エルダー(君)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%83%A7%29" title="エルダー(僧)" class="rel-wiki-page">エルダー(僧)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E9%AD%94%29" title="エルダー(魔)" class="rel-wiki-page">エルダー(魔)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E4%BE%8D%29" title="エルダー(侍)" class="rel-wiki-page">エルダー(侍)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E8%81%96%29" title="エルダー(聖)" class="rel-wiki-page">エルダー(聖)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%8B%A9%29" title="エルダー(狩)" class="rel-wiki-page">エルダー(狩)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%89%A3%29" title="エルダー(剣)" class="rel-wiki-page">エルダー(剣)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%9B%97%29" title="エルダー(盗)" class="rel-wiki-page">エルダー(盗)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%BF%8D%29" title="エルダー(忍)" class="rel-wiki-page">エルダー(忍)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E8%B3%A2%29" title="エルダー(賢)" class="rel-wiki-page">エルダー(賢)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%A7%98%29" title="エルダー(秘)" class="rel-wiki-page">エルダー(秘)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E4%BF%AE%29" title="エルダー(修)" class="rel-wiki-page">エルダー(修)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E3%83%AD%29" title="エルダー(ロ)" class="rel-wiki-page">エルダー(ロ)</a><!--/autolink--> (不死)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BD" title="魔宮殿の地下D" class="rel-wiki-page">魔宮殿の地下D</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%8B%A9%29" title="エルダー(狩)" class="rel-wiki-page">エルダー(狩)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%89%A3%29" title="エルダー(剣)" class="rel-wiki-page">エルダー(剣)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%9B%97%29" title="エルダー(盗)" class="rel-wiki-page">エルダー(盗)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%BA%E9%AD%82" title="人魂" class="rel-wiki-page">人魂</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%AA%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="オーディン・クローン" class="rel-wiki-page">オーディン・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BE" title="魔宮殿の地下E" class="rel-wiki-page">魔宮殿の地下E</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E5%BF%8D%29" title="エルダー(忍)" class="rel-wiki-page">エルダー(忍)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E8%B3%A2%29" title="エルダー(賢)" class="rel-wiki-page">エルダー(賢)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E7%A7%98%29" title="エルダー(秘)" class="rel-wiki-page">エルダー(秘)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BA%BA%E9%AD%82" title="人魂" class="rel-wiki-page">人魂</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%AB%E3%82%B7%E3%83%95%E3%82%A1%E3%83%BC%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="ルシファー・クローン" class="rel-wiki-page">ルシファー・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BF" title="魔宮殿の地下F" class="rel-wiki-page">魔宮殿の地下F</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E4%BF%AE%29" title="エルダー(修)" class="rel-wiki-page">エルダー(修)</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%80%E3%83%BC%28%E3%83%AD%29" title="エルダー(ロ)" class="rel-wiki-page">エルダー(ロ)</a><!--/autolink--> (不死)</li>
+<li><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%88%E3%83%9E%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="アントマン(モンスター)" class="rel-wiki-page">アントマン</a> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%9E%E3%83%86%E3%83%A9%E3%82%B9%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="アマテラス・クローン" class="rel-wiki-page">アマテラス・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%91%E3%82%BA%E3%82%BA%E8%A8%8E%E4%BC%90%E6%88%A6" title="パズズ討伐戦" class="rel-wiki-page">パズズ討伐戦</a><!--/autolink-->
+<ul class="list2"><li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%97%E3%83%AD%E3%83%86%E3%82%AF%E3%82%BF%E3%83%BC" title="プロテクター" class="rel-wiki-page">プロテクター</a><!--/autolink--> (神魔)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E6%A0%B8%E6%AD%A6%E8%A3%85%E3%82%B4%E3%83%BC%E3%83%AC%E3%83%A0" title="核武装ゴーレム" class="rel-wiki-page">核武装ゴーレム</a><!--/autolink--> (魔物)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%AB%E3%83%95%E3%82%A1" title="アルファ" class="rel-wiki-page">アルファ</a><!--/autolink--> (人型)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%AC%E3%83%88%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%BF%E3%83%B3%E3%82%AF" title="ガトリングタンク" class="rel-wiki-page">ガトリングタンク</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%82%A4%E3%82%A2%E3%83%BC%E3%83%89%E3%83%AC%E3%82%A4%E3%82%AF" title="ファイアードレイク" class="rel-wiki-page">ファイアードレイク</a><!--/autolink--> (竜族)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%82%A2" title="ロア" class="rel-wiki-page">ロア</a><!--/autolink--> (不死)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E6%AD%A3%E4%BD%93%E4%B8%8D%E6%98%8E" title="正体不明" class="rel-wiki-page">正体不明</a><!--/autolink--> (不死)</li>
+<li><strong>◆<a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%AA%E3%82%A6%E3%82%A3%E3%82%B9%E3%83%97%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ウィルオウィスプ(モンスター)" class="rel-wiki-page">ウィルオウィスプ</a> (魔物)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8D%E3%82%AF%E3%83%AD%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="ネクロデーモン" class="rel-wiki-page">ネクロデーモン</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%8A%E3%82%B8%E3%83%BC%E3%83%9F%E3%82%B9%E3%83%88" title="エナジーミスト" class="rel-wiki-page">エナジーミスト</a><!--/autolink--> (不死)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88" title="ミストゴースト" class="rel-wiki-page">ミストゴースト</a><!--/autolink--> (不死)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%8B%E3%82%A2%E3%83%B3%E7%8E%8B" title="ドラゴニアン王" class="rel-wiki-page">ドラゴニアン王</a><!--/autolink--> (竜族)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グレートドラゴン" class="rel-wiki-page">グレートドラゴン</a><!--/autolink--> (竜族)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E9%87%8D%E8%A3%85%E7%94%B2%E5%85%B5" title="重装甲兵" class="rel-wiki-page">重装甲兵</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B0%E3%83%BC%E3%83%B3" title="ドラグーン" class="rel-wiki-page">ドラグーン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%97%E3%83%AA%E3%83%B3%E3%82%B9" title="ドラゴンプリンス" class="rel-wiki-page">ドラゴンプリンス</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グリーンドラゴン" class="rel-wiki-page">グリーンドラゴン</a><!--/autolink--> (竜族)</li>
+<li><strong>◆<a href="/guildmono2/%E3%83%97%E3%83%A9%E3%82%A4%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="プライドドラゴン(モンスター)" class="rel-wiki-page">プライドドラゴン</a> (竜族)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A4%E3%82%A8%E3%83%AD%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="イエロードラゴン" class="rel-wiki-page">イエロードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%AB%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブルードラゴン" class="rel-wiki-page">ブルードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9E%E3%82%B8%E3%83%83%E3%82%AF%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="マジックドラゴン" class="rel-wiki-page">マジックドラゴン</a><!--/autolink--> (竜族)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%91%E3%82%BA%E3%82%BA" title="パズズ" class="rel-wiki-page">パズズ</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%92%E3%83%BC%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%B9%E3%83%95%E3%82%A3%E3%82%A2" title="ヒーリングスフィア" class="rel-wiki-page">ヒーリングスフィア</a><!--/autolink--> (魔物)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%9C%80%E7%B5%82%E6%88%A6" title="最終戦" class="rel-wiki-page">最終戦</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%92%E3%83%BC%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%B9%E3%83%95%E3%82%A3%E3%82%A2" title="ヒーリングスフィア" class="rel-wiki-page">ヒーリングスフィア</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%82%B9%E3%83%95%E3%82%A3%E3%82%A2" title="ダークスフィア" class="rel-wiki-page">ダークスフィア</a><!--/autolink--> (不死)</li>
+<li><a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%AA%E3%82%A6%E3%82%A3%E3%82%B9%E3%83%97%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ウィルオウィスプ(モンスター)" class="rel-wiki-page">ウィルオウィスプ</a> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%8F%E3%83%87%E3%82%B9%E3%83%BB%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3" title="ハデス・クローン" class="rel-wiki-page">ハデス・クローン</a><!--/autolink--> (神魔)</strong></li></ul></li></ul>
+<div class="caption-flybox">
+<div id="pc-caption-20th-ad-container">
+<!-- /19033742/WIKIWIKI_PC_CAPTION_20TH -->
+<div id='div-gpt-ad-1566473930452-0' class="hidden-switch-class">
+<script>
+    googletag.cmd.push(function() {googletag.display('div-gpt-ad-1566473930452-0'); });
+</script>
+</div>
+</div>
+</div>
+<h3 id="h3_content_1_9" class="heading-after-first">神々の宴  <a class="anchor_super" name ="pe2442a9"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91&id=pe2442a9" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><!--autolink--><a href="/guildmono2/%E9%9C%A7%E3%81%AE%E6%A3%AE" title="霧の森" class="rel-wiki-page">霧の森</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%95%E3%81%BE%E3%82%88%E3%81%86%E6%AD%BB%E4%BD%93" title="さまよう死体" class="rel-wiki-page">さまよう死体</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%82%B4%E3%83%BC%E3%82%B9%E3%83%88" title="ミストゴースト" class="rel-wiki-page">ミストゴースト</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8D%E3%82%AF%E3%83%AD%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="ネクロデーモン" class="rel-wiki-page">ネクロデーモン</a><!--/autolink--> (不死)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%82%A2" title="ロア" class="rel-wiki-page">ロア</a><!--/autolink--> (不死)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%B3%E3%83%89%E3%83%A9%E3%82%B9" title="アンドラス" class="rel-wiki-page">アンドラス</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%A1%E3%83%87%E3%83%A5%E3%83%BC%E3%82%B5" title="メデューサ" class="rel-wiki-page">メデューサ</a><!--/autolink--> (魔物)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%83%9F%E3%83%AA%E3%82%A2%E3%81%AE%E7%94%BA" title="ファミリアの町" class="rel-wiki-page">ファミリアの町</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%AA%E3%83%AB%E3%83%88%E3%83%AD%E3%82%B9" title="オルトロス" class="rel-wiki-page">オルトロス</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%A3%E3%83%89%E3%82%A6%E3%82%B5%E3%83%BC%E3%83%9A%E3%83%B3%E3%83%88" title="シャドウサーペント" class="rel-wiki-page">シャドウサーペント</a><!--/autolink--> (魔物)</li>
+<li>★<!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="エンジェル" class="rel-wiki-page">エンジェル</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%9B%E3%83%A0%E3%83%B3%E3%82%AF%E3%83%AB%E3%82%B9" title="ホムンクルス" class="rel-wiki-page">ホムンクルス</a><!--/autolink--> (不死)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%83%BC%E3%82%BA%E3%82%A6%E3%82%A7%E3%83%AB%E3%81%AE%E9%AD%94%E5%A5%B3" title="ローズウェルの魔女" class="rel-wiki-page">ローズウェルの魔女</a><!--/autolink--> (人型)</strong></li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%A1%E3%83%87%E3%83%A5%E3%83%BC%E3%82%B5" title="メデューサ" class="rel-wiki-page">メデューサ</a><!--/autolink--> (魔物)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%99%E3%83%AB%E3%83%95%E3%82%A1%E3%82%B4%E3%83%BC%E3%83%AB" title="ベルファゴール" class="rel-wiki-page">ベルファゴール</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E7%89%B9%E6%94%BB" title="帝都特攻" class="rel-wiki-page">帝都特攻</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E5%85%B5" title="帝国兵" class="rel-wiki-page">帝国兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%B8%9D%E5%9B%BD%E9%AD%94%E9%81%93%E5%85%B5" title="帝国魔道兵" class="rel-wiki-page">帝国魔道兵</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="エンジェル" class="rel-wiki-page">エンジェル</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB%E3%83%8A%E3%82%A4%E3%83%88" title="エンジェルナイト" class="rel-wiki-page">エンジェルナイト</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%80%E3%83%BC%E3%82%AF%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BB%E3%82%B9" title="ダークプリンセス" class="rel-wiki-page">ダークプリンセス</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%8F%E3%82%A4%E3%83%97%E3%83%AA%E3%83%BC%E3%82%B9%E3%83%88" title="ハイプリースト" class="rel-wiki-page">ハイプリースト</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%82%A8%E3%83%B3%E3%82%B8%E3%82%A7%E3%83%AB" title="アークエンジェル" class="rel-wiki-page">アークエンジェル</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%AA%E3%82%A2%E3%83%AB%E3%82%AC%E3%83%BC%E3%83%89" title="インペリアルガード" class="rel-wiki-page">インペリアルガード</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B8%E3%82%A7%E3%82%B9%E3%82%BF%E3%83%BC" title="ジェスター" class="rel-wiki-page">ジェスター</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%AE%B0%E7%9B%B8%E3%82%B4%E3%83%83%E3%83%87%E3%82%A3%E3%82%B9" title="宰相ゴッディス" class="rel-wiki-page">宰相ゴッディス</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E8%81%96%E9%A8%8E%E5%A3%AB%E3%83%AA%E3%83%81%E3%83%A3%E3%83%BC%E3%83%89" title="聖騎士リチャード" class="rel-wiki-page">聖騎士リチャード</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E4%B8%BB%E5%A4%A9%E4%BD%BF%E3%83%89%E3%83%9F%E3%83%8B%E3%82%AA%E3%83%B3" title="主天使ドミニオン" class="rel-wiki-page">主天使ドミニオン</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E5%8A%9B%E5%A4%A9%E4%BD%BF%E3%83%B4%E3%82%A1%E3%83%BC%E3%83%81%E3%83%A3%E3%83%BC" title="力天使ヴァーチャー" class="rel-wiki-page">力天使ヴァーチャー</a><!--/autolink--> (神魔)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%95%E3%82%A9%E3%83%A1%E3%83%83%E3%83%88" title="バフォメット" class="rel-wiki-page">バフォメット</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%A3%AE%E3%81%AE%E5%9C%B0%E4%B8%8B" title="森の地下" class="rel-wiki-page">森の地下</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E9%98%B2%E8%A1%9B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0" title="防衛システム" class="rel-wiki-page">防衛システム</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%A0%B8%E6%AD%A6%E8%A3%85%E3%82%B4%E3%83%BC%E3%83%AC%E3%83%A0" title="核武装ゴーレム" class="rel-wiki-page">核武装ゴーレム</a><!--/autolink--> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%87%E3%83%A5%E3%83%A9%E3%83%8F%E3%83%B3" title="デュラハン" class="rel-wiki-page">デュラハン</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%AD%E3%82%A2" title="ロア" class="rel-wiki-page">ロア</a><!--/autolink--> (不死)</strong></li>
+<li><strong>◆<a href="/guildmono2/%E3%82%B5%E3%82%AD%E3%83%A5%E3%83%90%E3%82%B9%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サキュバス(モンスター)" class="rel-wiki-page">サキュバス</a> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%95%E3%82%A3%E3%83%B3%E3%82%AF%E3%82%B9" title="スフィンクス" class="rel-wiki-page">スフィンクス</a><!--/autolink--> (魔物)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%9E%E3%83%AB%E3%82%B3%E3%82%AD%E3%82%A2%E3%82%B9" title="マルコキアス" class="rel-wiki-page">マルコキアス</a><!--/autolink--> (神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%A8%E6%82%AA%E9%AD%94%E3%81%AE%E6%88%A6%E5%A0%B4" title="竜と悪魔の戦場" class="rel-wiki-page">竜と悪魔の戦場</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%81%95%E3%81%BE%E3%82%88%E3%81%86%E6%AD%BB%E4%BD%93" title="さまよう死体" class="rel-wiki-page">さまよう死体</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AC%E3%83%83%E3%82%B5%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="レッサーデーモン" class="rel-wiki-page">レッサーデーモン</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ウィンドドラゴン" class="rel-wiki-page">ウィンドドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グレートドラゴン" class="rel-wiki-page">グレートドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%8D%E3%82%AF%E3%83%AD%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="ネクロデーモン" class="rel-wiki-page">ネクロデーモン</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="グレーターデーモン" class="rel-wiki-page">グレーターデーモン</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%82%A6%E3%82%A3%E3%82%B6%E3%83%BC%E3%83%89" title="アークウィザード" class="rel-wiki-page">アークウィザード</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A4%E3%82%A8%E3%83%AD%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="イエロードラゴン" class="rel-wiki-page">イエロードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E8%A6%81%E5%A1%9E%E7%AB%9C" title="要塞竜" class="rel-wiki-page">要塞竜</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%AB%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブルードラゴン" class="rel-wiki-page">ブルードラゴン</a><!--/autolink--> (竜族)</li>
+<li><a href="/guildmono2/%E3%83%AA%E3%83%83%E3%83%81%E3%83%BC%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="リッチー(モンスター)" class="rel-wiki-page">リッチー</a> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B9%E3%83%95%E3%82%A3%E3%83%B3%E3%82%AF%E3%82%B9" title="スフィンクス" class="rel-wiki-page">スフィンクス</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%AD%E3%83%A5%E3%83%90%E3%82%B9%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サキュバス(モンスター)" class="rel-wiki-page">サキュバス</a> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%AD%E3%82%A2" title="ロア" class="rel-wiki-page">ロア</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%87%E3%83%A5%E3%83%A9%E3%83%8F%E3%83%B3" title="デュラハン" class="rel-wiki-page">デュラハン</a><!--/autolink--> (人型)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3" title="アークデーモン" class="rel-wiki-page">アークデーモン</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%8B%E3%82%A2%E3%83%B3%E7%8E%8B" title="ドラゴニアン王" class="rel-wiki-page">ドラゴニアン王</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シルバードラゴン" class="rel-wiki-page">シルバードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%B3%E3%82%B0%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="キングドラゴン" class="rel-wiki-page">キングドラゴン</a><!--/autolink--> (竜族)</li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E6%B5%B7%E5%BA%95%E7%A5%9E%E6%AE%BF" title="海底神殿" class="rel-wiki-page">海底神殿</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B7%E3%82%A7%E3%83%B3%E3%83%88%E3%83%9E%E3%83%BC%E3%83%A1%E3%82%A4%E3%83%89" title="エンシェントマーメイド" class="rel-wiki-page">エンシェントマーメイド</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%B5%B7%E7%8D%A3" title="海獣" class="rel-wiki-page">海獣</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E6%B7%B1%E6%B5%B7%E7%8D%A3" title="深海獣" class="rel-wiki-page">深海獣</a><!--/autolink--> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%AA%E3%83%B3%E3%82%B0%E3%83%9E%E3%82%B7%E3%83%BC%E3%83%B3" title="キリングマシーン" class="rel-wiki-page">キリングマシーン</a><!--/autolink--> (人型)</strong></li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%A4%E3%83%AB%E3%83%AB%E3%83%A4%E3%83%B3%E3%82%AB%E3%82%B7%E3%83%A5" title="イルルヤンカシュ" class="rel-wiki-page">イルルヤンカシュ</a><!--/autolink--> (不死)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%A7%E8%9B%87%E3%81%AE%E6%B4%9E%E7%AA%9F" title="大蛇の洞窟" class="rel-wiki-page">大蛇の洞窟</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E5%A4%A9%E7%8B%90" title="天狐" class="rel-wiki-page">天狐</a><!--/autolink--> (魔物)</li>
+<li><!--autolink--><a href="/guildmono2/%E5%A4%9C%E5%8F%89" title="夜叉" class="rel-wiki-page">夜叉</a><!--/autolink--> (神魔)</li>
+<li><!--autolink--><a href="/guildmono2/%E4%BF%AE%E7%BE%85" title="修羅" class="rel-wiki-page">修羅</a><!--/autolink--> (神魔)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%A4%E3%83%9E%E3%82%BF%E3%83%8E%E3%82%AA%E3%83%AD%E3%83%81" title="ヤマタノオロチ" class="rel-wiki-page">ヤマタノオロチ</a><!--/autolink--> (魔物)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E9%B3%A5%E5%B1%85" title="鳥居" class="rel-wiki-page">鳥居</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%BC%E3%83%AB" title="グール" class="rel-wiki-page">グール</a><!--/autolink--> (不死)</li>
+<li><!--autolink--><a href="/guildmono2/%E9%9B%B7%E7%B2%BE" title="雷精" class="rel-wiki-page">雷精</a><!--/autolink--> (魔物)</li>
+<li><a href="/guildmono2/%E3%82%B5%E3%83%B3%E3%83%80%E3%83%BC%E3%83%90%E3%83%BC%E3%83%89%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="サンダーバード(モンスター)" class="rel-wiki-page">サンダーバード</a> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%82%BF%E3%82%B1%E3%83%9F%E3%82%AB%E3%83%85%E3%83%81" title="タケミカヅチ" class="rel-wiki-page">タケミカヅチ</a><!--/autolink--> (中位神魔)</strong></li></ul></li>
+<li><!--autolink--><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E5%B7%A3" title="竜の巣" class="rel-wiki-page">竜の巣</a><!--/autolink-->
+<ul class="list2"><li><!--autolink--><a href="/guildmono2/%E3%83%AA%E3%83%B3%E3%83%89%E3%83%96%E3%83%AB%E3%83%A0" title="リンドブルム" class="rel-wiki-page">リンドブルム</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B0%E3%83%AC%E3%83%BC%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="グレートドラゴン" class="rel-wiki-page">グレートドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A4%E3%82%A8%E3%83%AD%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="イエロードラゴン" class="rel-wiki-page">イエロードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%96%E3%83%AB%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="ブルードラゴン" class="rel-wiki-page">ブルードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シードラゴン" class="rel-wiki-page">シードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B7%E3%82%A7%E3%83%B3%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="エンシェントドラゴン" class="rel-wiki-page">エンシェントドラゴン</a><!--/autolink--> (竜族)</li>
+<li><a href="/guildmono2/%E3%83%9B%E3%83%AF%E3%82%A4%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ホワイトドラゴン(モンスター)" class="rel-wiki-page">ホワイトドラゴン</a> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%82%A4%E3%82%A2%E3%83%BC%E3%83%89%E3%83%AC%E3%82%A4%E3%82%AF" title="ファイアードレイク" class="rel-wiki-page">ファイアードレイク</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%B7%E3%83%AB%E3%83%90%E3%83%BC%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="シルバードラゴン" class="rel-wiki-page">シルバードラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E3%82%AD%E3%83%B3%E3%82%B0%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3" title="キングドラゴン" class="rel-wiki-page">キングドラゴン</a><!--/autolink--> (竜族)</li>
+<li><!--autolink--><a href="/guildmono2/%E8%A6%81%E5%A1%9E%E7%AB%9C" title="要塞竜" class="rel-wiki-page">要塞竜</a><!--/autolink--> (竜族)</li>
+<li>★<a href="/guildmono2/%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%AA%E3%82%A6%E3%82%A3%E3%82%B9%E3%83%97%28%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%29" title="ウィルオウィスプ(モンスター)" class="rel-wiki-page">ウィルオウィスプ</a> (魔物)</li>
+<li><strong>◆<!--autolink--><a href="/guildmono2/%E3%83%A8%E3%83%AB%E3%83%A0%E3%83%B3%E3%82%AC%E3%83%AB%E3%83%89%28%E9%A0%AD%29" title="ヨルムンガルド(頭)" class="rel-wiki-page">ヨルムンガルド(頭)</a><!--/autolink--> (竜族)</strong></li></ul></li></ul>
+                </div>
+
+                <div id="main-contents-bottom">
+                    <div class="caption-flybox" >
+<div id="pc-bottom-parent-ad-container" style="min-height:250px;">
+<div id="pc-bottom-left-ad-container">
+    <!-- /19033742/WIKIWIKI_PC_BOTTOM_LEFT or /19033742/WIKIWIKI_SP_SECOND -->
+    <div id='div-gpt-ad-1567408559923-0' class="hidden-switch-class"></div>
+</div>
+<div id="pc-bottom-right-ad-container">
+    <!-- /19033742/WIKIWIKI_PC_BOTTOM_RIGHT -->
+    <div id='div-gpt-ad-1658912377789-0'></div>
+</div>
+</div>
+</div>
+
+<style>
+.pc-bottom-ad-default {
+    margin-top:120px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:flex-start;
+    gap: 10px 5px;
+}
+.pc-bottom-ad-center{
+    margin-top:120px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap: 10px 5px;
+}
+.pc-bottom-ad-mobile{
+    margin-top:20px;
+    margin-bottom:20px;
+    display:flex;
+    align-items: center;
+    flex-direction:column;
+    position:sticky;
+    z-index: 3;
+    top:45px;
+}
+</style>
+
+<script>
+(function() {
+    var body = document.getElementById('body');
+    var co = document.getElementById("pc-bottom-parent-ad-container");
+    var fh = 50;
+    if (!wi_ismobile && body.clientHeight < 620) {
+        co.style.marginTop = '200px';
+    }
+    if (wi_ismobile && body.clientWidth < 400){
+        co.classList.add("pc-bottom-ad-mobile");
+    } else if (co.clientWidth < 769) {
+        co.classList.add("pc-bottom-ad-center");
+    } else {
+        co.classList.add("pc-bottom-ad-default");
+    }
+}());
+</script>
+                </div>
+            </div>
+        </div>
+
+        
+                    <div class="column-left">
+                <div id="menubar">
+                                        <h2 id="h2_content_2_0" >全般</h2>
+<ul class="list1"><li><a href="/guildmono2/" title="FrontPage" class="rel-wiki-page">FrontPage</a></li>
+<li><a href="/guildmono2/%E3%82%B2%E3%83%BC%E3%83%A0%E6%A6%82%E8%A6%81" title="ゲーム概要" class="rel-wiki-page">ゲーム概要</a></li>
+<li><a href="/guildmono2/%E7%94%BB%E9%9D%A2%E8%AA%AC%E6%98%8E" title="画面説明" class="rel-wiki-page">画面説明</a></li>
+<li><a href="/guildmono2/%E5%88%9D%E5%BF%83%E8%80%85%E3%82%AC%E3%82%A4%E3%83%89" title="初心者ガイド" class="rel-wiki-page">初心者ガイド</a></li>
+<li><a href="/guildmono2/%EF%BC%B1%EF%BC%86%EF%BC%A1" title="Ｑ＆Ａ" class="rel-wiki-page">Ｑ＆Ａ</a></li>
+<li><a href="/guildmono2/%E3%82%A2%E3%83%89%E3%82%AA%E3%83%B3%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" title="アドオンシステムについて" class="rel-wiki-page">課金要素について</a></li>
+<li><a href="/guildmono2/%E3%82%B2%E3%83%BC%E3%83%A0%E3%83%AA%E3%82%BB%E3%83%83%E3%83%88%E6%A9%9F%E8%83%BD" title="ゲームリセット機能" class="rel-wiki-page">ゲームリセット機能</a><br />
+<br class="spacer"></li></ul>
+<h2 id="h2_content_2_1" class="heading-after-first">wiki内単語検索</h2>
+<form action="/guildmono2/::cmd/search" method="get">
+ <div>
+  <input type="search"  name="word" value="" size="20" />
+  <input type="radio" name="type" id="_p_search_AND" value="AND"  checked="checked" />
+  <label for="_p_search_AND">AND検索</label>
+  <input type="radio" name="type" id="_p_search_OR" value="OR"   />
+  <label for="_p_search_OR">OR検索</label>
+  &nbsp;<input type="submit" value="検索" />
+ </div>
+</form>
+<p><br class="spacer"></p>
+<h2 id="h2_content_2_2" class="heading-after-first">データベース</h2>
+<h4 id="h4_content_2_3" class="heading-after-first">アイテムデータ</h4>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7" title="アイテム一覧" class="rel-wiki-page">アイテム一覧</a><br />
+┗分割ページ(重くて見れない時用)<br />
+●<a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7/%E7%B4%B0%E5%89%A3%EF%BD%9E%E5%BC%93" title="アイテム一覧/細剣～弓" class="rel-wiki-page">細剣・剣・刀・弓</a><br />
+●<a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7/%E9%8E%A7%EF%BD%9E%E5%B0%8F%E6%89%8B" title="アイテム一覧/鎧～小手" class="rel-wiki-page">鎧・重鎧・盾・小手</a><br />
+●<a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7/%E3%83%AF%E3%83%B3%E3%83%89%EF%BD%9E%E5%AE%9D%E7%9F%B3" title="アイテム一覧/ワンド～宝石" class="rel-wiki-page">ワンド・ロッド・魔道書・法衣・宝石</a><br />
+●<a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7/%E3%81%9D%E3%81%AE%E4%BB%96%EF%BD%9E%E9%AD%94%E9%80%A0%E7%B4%A0%E6%9D%90" title="アイテム一覧/その他～魔造素材" class="rel-wiki-page">その他・種族専用・合成用・魔造素材</a></li>
+<li><a href="/guildmono2/%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E5%88%A5%E3%83%AC%E3%82%A2%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E4%B8%80%E8%A6%A7" title="ダンジョン別レアアイテム一覧" class="rel-wiki-page">ダンジョン別レアアイテム</a></li>
+<li><a href="/guildmono2/%E7%A7%B0%E5%8F%B7%E4%BB%98%E3%81%8D%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0" title="称号付きアイテム" class="rel-wiki-page">称号付きアイテム</a></li>
+<li><a href="/guildmono2/%E3%83%89%E3%83%AD%E3%83%83%E3%83%97%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0" title="ドロップアイテム" class="rel-wiki-page">ドロップアイテム</a></li></ul>
+<h4 id="h4_content_2_4" class="heading-after-first">合成・<!--autolink--><a href="/guildmono2/%E5%AE%9D%E7%9F%B3%E6%94%B9%E9%80%A0" title="宝石改造" class="rel-wiki-page">宝石改造</a><!--/autolink--></h4>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E5%90%88%E6%88%90" title="アイテム合成" class="rel-wiki-page">アイテム合成</a></li>
+<li><a href="/guildmono2/%E7%A7%B0%E5%8F%B7%E7%B6%99%E6%89%BF%E5%90%88%E6%88%90" title="称号継承合成" class="rel-wiki-page">称号継承合成</a></li>
+<li><a href="/guildmono2/%E5%AE%9D%E7%9F%B3%E6%94%B9%E9%80%A0" title="宝石改造" class="rel-wiki-page">宝石改造</a></li></ul>
+<h4 id="h4_content_2_5" class="heading-after-first">その他</h4>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%20%E6%89%8B%E8%A8%98%E3%82%B3%E3%83%B3%E3%83%97%E5%A0%B1%E9%85%AC%E4%B8%80%E8%A6%A7" title="イベント 手記コンプ報酬一覧" class="rel-wiki-page">シナリオ・手記報酬一覧</a></li>
+<li><a href="/guildmono2/%E5%AE%9F%E7%B8%BE%E8%A7%A3%E9%99%A4" title="実績解除" class="rel-wiki-page">実績解除</a></li>
+<li><a href="/guildmono2/%E3%83%91%E3%83%B3%E3%83%89%E3%83%A9%E3%83%9C%E3%83%83%E3%82%AF%E3%82%B9" title="パンドラボックス" class="rel-wiki-page">パンドラボックス</a></li>
+<li><a href="/guildmono2/%E7%A5%9E%E5%99%A8%E4%BA%A4%E6%8F%9B" title="神器交換" class="rel-wiki-page">神器交換</a></li></ul>
+<h4 id="h4_content_2_6" class="heading-after-first">キャラクターデータ</h4>
+<ul class="list1"><li><a href="/guildmono2/%E5%9F%BA%E6%9C%AC%E8%83%BD%E5%8A%9B%E5%80%A4%E4%B8%80%E8%A6%A7" title="基本能力値一覧" class="rel-wiki-page">基本能力値一覧</a></li>
+<li><a href="/guildmono2/%E7%A8%AE%E6%97%8F%E3%83%87%E3%83%BC%E3%82%BF" title="種族データ" class="rel-wiki-page">種族データ</a></li>
+<li><a href="/guildmono2/%E8%81%B7%E6%A5%AD%E3%83%87%E3%83%BC%E3%82%BF" title="職業データ" class="rel-wiki-page">職業データ</a></li>
+<li><a href="/guildmono2/%E5%80%8B%E6%80%A7" title="個性" class="rel-wiki-page">個性</a></li>
+<li><a href="/guildmono2/NPC%E3%83%87%E3%83%BC%E3%82%BF" title="NPCデータ" class="rel-wiki-page">NPCデータ</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E9%80%A0%E7%94%9F%E7%89%A9%E3%83%87%E3%83%BC%E3%82%BF" title="魔造生物データ" class="rel-wiki-page">魔造生物データ</a><br />
+┗<a href="/guildmono2/%E3%82%B4%E3%83%BC%E3%83%AC%E3%83%A0%E6%94%B9%E9%80%A0" title="ゴーレム改造" class="rel-wiki-page">ゴーレム改造</a></li>
+<li><a href="/guildmono2/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC%E7%B5%8C%E9%A8%93%E5%80%A4%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB" title="キャラクター経験値テーブル" class="rel-wiki-page">キャラクター経験値テーブル</a></li></ul>
+<h4 id="h4_content_2_7" class="heading-after-first">スキルデータ</h4>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%B9%E3%82%AD%E3%83%AB%E3%81%AE%E4%BB%95%E6%A7%98" title="スキルの仕様" class="rel-wiki-page">スキルの仕様</a></li>
+<li><a href="/guildmono2/%E6%94%BB%E6%92%83%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB" title="攻撃系スキル" class="rel-wiki-page">攻撃系スキル</a></li>
+<li><a href="/guildmono2/%E9%98%B2%E5%BE%A1%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB" title="防御系スキル" class="rel-wiki-page">防御・回復系スキル</a></li>
+<li><a href="/guildmono2/%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%E9%96%A2%E9%80%A3%E3%82%B9%E3%82%AD%E3%83%AB" title="ステータス関連スキル" class="rel-wiki-page">ステータス関連・その他スキル</a></li>
+<li><a href="/guildmono2/%E5%A4%89%E6%8F%9B%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB" title="変換系スキル" class="rel-wiki-page">変換系スキル</a></li>
+<li><a href="/guildmono2/%E5%90%84%E7%A8%AE%E7%8D%B2%E5%BE%97%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB" title="各種獲得系スキル" class="rel-wiki-page">各種獲得系スキル</a></li>
+<li><a href="/guildmono2/%E7%A8%AE%E6%97%8F%E3%83%BB%E8%81%B7%E6%A5%AD%E3%82%B9%E3%82%AD%E3%83%AB" title="種族・職業スキル" class="rel-wiki-page">種族・職業スキル</a></li>
+<li><a href="/guildmono2/%E3%82%B9%E3%82%AD%E3%83%AB%E7%99%BA%E5%8B%95%E7%8E%87%E4%B8%80%E8%A6%A7" title="スキル発動率一覧" class="rel-wiki-page">スキル発動率一覧</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%EF%BC%8F%E5%83%A7%E4%BE%B6%E9%AD%94%E6%B3%95%E4%B8%80%E8%A6%A7" title="魔法使い／僧侶魔法一覧" class="rel-wiki-page">魔法使い／僧侶魔法一覧</a></li></ul>
+<h3 id="h3_content_2_8" class="heading-after-first">迷宮・モンスター</h3>
+<h4 id="h4_content_2_9" class="heading-after-first">迷宮</h4>
+<div class="fold-container  clearfix">
+    <button class="fold-toggle-button hidden-on-open"><i class="fal fa-plus-square"></i></button>
+    <button class="fold-toggle-button visible-on-open"><i class="fal fa-minus-square"></i></button>
+    <div class="fold-summary hidden-on-open"><a href="/guildmono2/%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7" title="迷宮一覧" class="rel-wiki-page">迷宮一覧</a></div>
+    <div class="fold-content visible-on-open"><h3 id="h3_content_4_0" ><!--autolink--><a href="/guildmono2/%E3%83%90%E3%83%99%E3%83%AB%E3%81%AE%E5%A1%94" title="バベルの塔" class="rel-wiki-page">バベルの塔</a><!--/autolink-->  <a class="anchor_super" name ="ve51b806"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=ve51b806" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%90%E3%83%99%E3%83%AB%E3%81%AE%E5%A1%94" title="バベルの塔" class="rel-wiki-page">バベルの塔</a></li>
+<li><a href="/guildmono2/%E3%83%90%E3%83%99%E3%83%AB%E3%81%AE%E5%A1%94%28%E3%82%AA%E3%83%B3%E3%83%A9%E3%82%A4%E3%83%B3%29" title="バベルの塔(オンライン)" class="rel-wiki-page">バベルの塔(オンライン)</a></li></ul>
+<h3 id="h3_content_4_1" class="heading-after-first">冒険の始まり  <a class="anchor_super" name ="s985d5b7"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=s985d5b7" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%B9%E3%83%A9%E3%82%A4%E3%83%A0%E3%81%AE%E6%B4%9E%E7%AA%9F" title="スライムの洞窟" class="rel-wiki-page">スライムの洞窟</a></li>
+<li><a href="/guildmono2/%E5%B9%B3%E5%8E%9F" title="平原" class="rel-wiki-page">平原</a></li>
+<li><a href="/guildmono2/%E6%B9%BF%E5%9C%B0" title="湿地" class="rel-wiki-page">湿地</a></li>
+<li><a href="/guildmono2/%E6%A3%AE%E6%9E%97" title="森林" class="rel-wiki-page">森林</a></li>
+<li><a href="/guildmono2/%E5%B1%B1%E9%81%93" title="山道" class="rel-wiki-page">山道</a></li></ul>
+<h3 id="h3_content_4_2" class="heading-after-first">集まる冒険者  <a class="anchor_super" name ="b7bf3aab"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=b7bf3aab" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%82%A2%E3%82%B8%E3%83%88" title="アジト" class="rel-wiki-page">アジト</a></li>
+<li><a href="/guildmono2/%E5%BB%83%E5%A2%9F" title="廃墟" class="rel-wiki-page">廃墟</a></li>
+<li><a href="/guildmono2/%E5%A7%A5%E6%8D%A8%E5%B1%B1" title="姥捨山" class="rel-wiki-page">姥捨山</a></li>
+<li><a href="/guildmono2/%E3%82%A8%E3%83%AB%E3%83%95%E3%81%AE%E6%A3%AE" title="エルフの森" class="rel-wiki-page">エルフの森</a></li>
+<li><a href="/guildmono2/%E3%82%B7%E3%83%A5%E3%82%B1%E3%83%AB%E3%83%97%E6%B9%96" title="シュケルプ湖" class="rel-wiki-page">シュケルプ湖</a></li>
+<li><a href="/guildmono2/%E5%A4%A7%E7%9B%97%E8%B3%8A%E5%9B%A3" title="大盗賊団" class="rel-wiki-page">大盗賊団</a></li></ul>
+<h3 id="h3_content_4_3" class="heading-after-first">騎士の栄光  <a class="anchor_super" name ="t38763e0"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=t38763e0" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E5%8F%A4%E9%A4%A8" title="古館" class="rel-wiki-page">古館</a></li>
+<li><a href="/guildmono2/%E7%9B%97%E8%B3%8A%E8%BF%8E%E6%92%83%E6%88%A6" title="盗賊迎撃戦" class="rel-wiki-page">盗賊迎撃戦</a></li>
+<li><a href="/guildmono2/%E5%B7%9D%E6%B2%BF%E3%81%84" title="川沿い" class="rel-wiki-page">川沿い</a></li>
+<li><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E9%98%B2%E8%A1%9B%E6%88%A6" title="帝都防衛戦" class="rel-wiki-page">帝都防衛戦</a></li></ul>
+<h3 id="h3_content_4_4" class="heading-after-first">ディープダンジョン  <a class="anchor_super" name ="p56b017e"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=p56b017e" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%9B%E3%83%AB%E3%83%B3%E9%81%BA%E8%B7%A1" title="ホルン遺跡" class="rel-wiki-page">ホルン遺跡</a></li>
+<li><a href="/guildmono2/%E3%83%9E%E3%83%81%E3%82%A7%E3%82%B9%E9%81%BA%E8%B7%A1" title="マチェス遺跡" class="rel-wiki-page">マチェス遺跡</a></li>
+<li><a href="/guildmono2/%E3%83%A9%E3%83%AB%E3%83%90%E9%81%BA%E8%B7%A1" title="ラルバ遺跡" class="rel-wiki-page">ラルバ遺跡</a></li></ul>
+<h3 id="h3_content_4_5" class="heading-after-first">ドラゴンスレイヤーズ  <a class="anchor_super" name ="j24b7f5b"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=j24b7f5b" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E8%B0%B7" title="竜の谷" class="rel-wiki-page">竜の谷</a></li>
+<li><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1" title="氷雷山" class="rel-wiki-page">氷雷山</a></li>
+<li><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E4%B8%AD%E8%85%B9%EF%BC%89" title="氷雷山（中腹）" class="rel-wiki-page">氷雷山（中腹）</a></li>
+<li><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E5%B0%BE%E6%A0%B9%EF%BC%89" title="氷雷山（尾根）" class="rel-wiki-page">氷雷山（尾根）</a></li>
+<li><a href="/guildmono2/%E6%B0%B7%E9%9B%B7%E5%B1%B1%EF%BC%88%E9%A0%82%E4%B8%8A%EF%BC%89" title="氷雷山（頂上）" class="rel-wiki-page">氷雷山（頂上）</a></li>
+<li><a href="/guildmono2/%E9%BB%92%E9%9B%B2%E5%B1%B1" title="黒雲山" class="rel-wiki-page">黒雲山</a></li>
+<li><a href="/guildmono2/%E5%9C%B0%E4%B8%8B%E5%9D%91%E9%81%93" title="地下坑道" class="rel-wiki-page">地下坑道</a></li></ul>
+<h3 id="h3_content_4_6" class="heading-after-first">深い森  <a class="anchor_super" name ="b29e298a"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=b29e298a" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E6%B9%96%E5%BA%95%E9%81%BA%E8%B7%A1" title="湖底遺跡" class="rel-wiki-page">湖底遺跡</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E7%8D%A3%E3%81%AE%E6%A3%AE" title="魔獣の森" class="rel-wiki-page">魔獣の森</a></li>
+<li><a href="/guildmono2/%E8%BF%B7%E3%81%84%E3%81%AE%E6%A3%AE" title="迷いの森" class="rel-wiki-page">迷いの森</a></li></ul>
+<h3 id="h3_content_4_7" class="heading-after-first">反逆のギルド  <a class="anchor_super" name ="zb7fb3b0"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=zb7fb3b0" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%AD%E3%83%BC%E3%82%BA%E3%82%A6%E3%82%A7%E3%83%AB%E5%82%AD%E5%85%B5%E5%9B%A3" title="ローズウェル傭兵団" class="rel-wiki-page">ローズウェル傭兵団</a></li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%83%9C%E3%83%BC%E3%82%B0%E7%A0%94%E7%A9%B6%E6%89%80" title="サイボーグ研究所" class="rel-wiki-page">サイボーグ研究所</a></li>
+<li><a href="/guildmono2/%E5%91%82%E5%B8%83%E6%88%A6" title="呂布戦" class="rel-wiki-page">呂布戦</a></li></ul>
+<h3 id="h3_content_4_8" class="heading-after-first">南の大<!--autolink--><a href="/guildmono2/%E6%A3%AE%E6%9E%97" title="森林" class="rel-wiki-page">森林</a><!--/autolink-->  <a class="anchor_super" name ="c64d7a5e"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=c64d7a5e" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%92%E3%83%89%E3%83%A9%E7%81%AB%E5%B1%B1" title="ヒドラ火山" class="rel-wiki-page">ヒドラ火山</a></li>
+<li><a href="/guildmono2/%E3%82%B3%E3%83%AD%E3%82%B7%E3%82%A2%E3%83%A0" title="コロシアム" class="rel-wiki-page">コロシアム</a></li>
+<li><a href="/guildmono2/%E3%83%AC%E3%83%90%E3%83%8E%E3%83%B3%E3%81%AE%E6%A3%AE" title="レバノンの森" class="rel-wiki-page">レバノンの森</a></li>
+<li><a href="/guildmono2/%E3%82%A2%E3%83%9E%E3%82%BE%E3%83%8D%E3%82%B9%E9%A0%98" title="アマゾネス領" class="rel-wiki-page">アマゾネス領</a></li>
+<li><a href="/guildmono2/%E3%83%8E%E3%83%BC%E3%83%A0%E9%A0%98" title="ノーム領" class="rel-wiki-page">ノーム領</a></li>
+<li><a href="/guildmono2/%E3%82%AF%E3%83%AD%E3%83%8E%E3%82%B9%E7%A5%9E%E6%AE%BF" title="クロノス神殿" class="rel-wiki-page">クロノス神殿</a></li>
+<li><a href="/guildmono2/%E5%A4%A7%E6%A3%AE%E6%9E%97%E3%81%AE%E6%B1%BA%E6%88%A6" title="大森林の決戦" class="rel-wiki-page">大森林の決戦</a></li></ul>
+<h3 id="h3_content_4_9" class="heading-after-first">世界を巡る  <a class="anchor_super" name ="k03291ea"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=k03291ea" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E7%A9%BA%E4%B8%AD%E9%81%BA%E8%B7%A1" title="空中遺跡" class="rel-wiki-page">空中遺跡</a></li>
+<li><a href="/guildmono2/%E3%83%8D%E3%82%A2%E6%B9%96" title="ネア湖" class="rel-wiki-page">ネア湖</a></li>
+<li><a href="/guildmono2/%E5%A4%A7%E5%B9%B3%E5%8E%9F" title="大平原" class="rel-wiki-page">大平原</a></li>
+<li><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E7%8B%A9%E3%82%8A%E5%A0%B4" title="竜の狩り場" class="rel-wiki-page">竜の狩り場</a></li>
+<li><a href="/guildmono2/%E9%AD%8F%E7%8E%8B%E5%AE%AE" title="魏王宮" class="rel-wiki-page">魏王宮</a></li>
+<li><a href="/guildmono2/%E9%BB%84%E5%B1%B1" title="黄山" class="rel-wiki-page">黄山</a></li>
+<li><a href="/guildmono2/%E9%BB%84%E9%87%91%E5%AE%AE%E6%AE%BF" title="黄金宮殿" class="rel-wiki-page">黄金宮殿</a></li>
+<li><a href="/guildmono2/%E9%9B%AA%E5%B1%B1%E3%81%AE%E6%88%A6%E3%81%84" title="雪山の戦い" class="rel-wiki-page">雪山の戦い</a></li>
+<li><a href="/guildmono2/%E3%83%9E%E3%83%AC%E3%83%95%E3%82%A3%E3%83%A0%E3%81%AE%E4%B8%98" title="マレフィムの丘" class="rel-wiki-page">マレフィムの丘</a></li>
+<li><a href="/guildmono2/%E6%AD%BB%E7%A5%9E%E3%81%AE%E9%81%BA%E8%B7%A1" title="死神の遺跡" class="rel-wiki-page">死神の遺跡</a></li></ul>
+<h3 id="h3_content_4_10" class="heading-after-first">大帝国の野望  <a class="anchor_super" name ="ca2decc6"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=ca2decc6" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E5%A5%B4%E9%9A%B7%E7%AB%B6%E4%BA%89" title="奴隷競争" class="rel-wiki-page">奴隷競争</a></li>
+<li><a href="/guildmono2/%E3%82%B5%E3%82%A4%E3%82%AD%E3%83%83%E3%82%AF%E5%8F%8E%E5%AE%B9%E6%89%80" title="サイキック収容所" class="rel-wiki-page">サイキック収容所</a></li>
+<li><a href="/guildmono2/%E6%BB%85%E3%81%B3%E3%81%AE%E7%94%BA" title="滅びの町" class="rel-wiki-page">滅びの町</a></li>
+<li><a href="/guildmono2/%E3%83%B4%E3%82%A3%E3%83%B4%E3%82%A3%E3%82%A2%E3%83%B3%E3%83%BB%E3%83%9E%E3%83%BC%E3%82%B7%E3%83%A5" title="ヴィヴィアン・マーシュ" class="rel-wiki-page">ヴィヴィアン・マーシュ</a></li>
+<li><a href="/guildmono2/%E3%82%AE%E3%83%AB%E3%83%89%E9%98%B2%E8%A1%9B%E6%88%A6" title="ギルド防衛戦" class="rel-wiki-page">ギルド防衛戦</a></li>
+<li><a href="/guildmono2/%E5%A4%A9%E4%BD%BF%E8%A5%B2%E6%9D%A5" title="天使襲来" class="rel-wiki-page">天使襲来</a></li>
+<li><a href="/guildmono2/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AB%E3%83%8A%E3%82%A4%E3%83%84" title="テンプルナイツ" class="rel-wiki-page">テンプルナイツ</a></li>
+<li><a href="/guildmono2/%E5%A4%A7%E7%A5%9E%E6%AE%BF" title="大神殿" class="rel-wiki-page">大神殿</a></li></ul>
+<h3 id="h3_content_4_11" class="heading-after-first">竜の襲撃  <a class="anchor_super" name ="chap7-1"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=chap7-1" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E8%A5%B2%E6%92%83" title="ドラゴン襲撃" class="rel-wiki-page">ドラゴン襲撃</a></li>
+<li><a href="/guildmono2/%E4%BA%A4%E6%98%93%E5%95%86%E9%9A%8A" title="交易商隊" class="rel-wiki-page">交易商隊</a></li>
+<li><a href="/guildmono2/%E6%B0%B7%E3%81%AE%E5%B7%A8%E4%BA%BA" title="氷の巨人" class="rel-wiki-page">氷の巨人</a></li>
+<li><a href="/guildmono2/%E5%90%B8%E8%A1%80%E9%AC%BC%E8%A8%8E%E4%BC%90" title="吸血鬼討伐" class="rel-wiki-page">吸血鬼討伐</a></li>
+<li><a href="/guildmono2/%E5%8C%97%E6%96%B9%E3%81%AE%E5%9C%B0%E4%B8%8B%E9%81%BA%E8%B7%A1" title="北方の地下遺跡" class="rel-wiki-page">北方の地下遺跡</a></li>
+<li><a href="/guildmono2/%E5%8F%A4%E4%BB%A3%E3%82%A8%E3%83%AB%E3%83%95%E3%81%AE%E5%AF%BA%E9%99%A2" title="古代エルフの寺院" class="rel-wiki-page">古代エルフの寺院</a></li>
+<li><a href="/guildmono2/%E6%82%AA%E9%AD%94%E3%81%AE%E6%8C%87%E6%8F%AE%E5%AE%98" title="悪魔の指揮官" class="rel-wiki-page">悪魔の指揮官</a></li>
+<li><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E8%B7%A1%E5%9C%B0" title="帝都跡地" class="rel-wiki-page">帝都跡地</a></li></ul>
+<h3 id="h3_content_4_12" class="heading-after-first">魔宮殿  <a class="anchor_super" name ="chap7-2"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=chap7-2" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%9F%E3%82%B9%E3%83%88%E3%82%AC%E3%83%AB%E3%83%89%E6%8E%A2%E7%B4%A2" title="ミストガルド探索" class="rel-wiki-page">ミストガルド探索</a></li>
+<li><a href="/guildmono2/%E3%83%91%E3%83%B3%E3%83%87%E3%83%A2%E3%83%8B%E3%82%A6%E3%83%A0" title="パンデモニウム" class="rel-wiki-page">パンデモニウム</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E7%8E%8B%E5%9F%8E" title="魔王城" class="rel-wiki-page">魔王城</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BA" title="魔宮殿の地下A" class="rel-wiki-page">魔宮殿の地下A</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BB" title="魔宮殿の地下B" class="rel-wiki-page">魔宮殿の地下B</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BC" title="魔宮殿の地下C" class="rel-wiki-page">魔宮殿の地下C</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BD" title="魔宮殿の地下D" class="rel-wiki-page">魔宮殿の地下D</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BE" title="魔宮殿の地下E" class="rel-wiki-page">魔宮殿の地下E</a></li>
+<li><a href="/guildmono2/%E9%AD%94%E5%AE%AE%E6%AE%BF%E3%81%AE%E5%9C%B0%E4%B8%8BF" title="魔宮殿の地下F" class="rel-wiki-page">魔宮殿の地下F</a></li>
+<li><a href="/guildmono2/%E3%83%91%E3%82%BA%E3%82%BA%E8%A8%8E%E4%BC%90%E6%88%A6" title="パズズ討伐戦" class="rel-wiki-page">パズズ討伐戦</a></li>
+<li><a href="/guildmono2/%E6%9C%80%E7%B5%82%E6%88%A6" title="最終戦" class="rel-wiki-page">最終戦</a></li></ul>
+<h3 id="h3_content_4_13" class="heading-after-first">神々の宴  <a class="anchor_super" name ="extra"></a> <a class="anchor_super" href="/guildmono2/::cmd/edit?page=%E8%BF%B7%E5%AE%AE%E4%B8%80%E8%A6%A7&id=extra" rel='nofollow'><span class="system-icon paraedit" title="Edit"></span></a></h3>
+<ul class="list1"><li><a href="/guildmono2/%E9%9C%A7%E3%81%AE%E6%A3%AE" title="霧の森" class="rel-wiki-page">霧の森</a></li>
+<li><a href="/guildmono2/%E3%83%95%E3%82%A1%E3%83%9F%E3%83%AA%E3%82%A2%E3%81%AE%E7%94%BA" title="ファミリアの町" class="rel-wiki-page">ファミリアの町</a></li>
+<li><a href="/guildmono2/%E5%B8%9D%E9%83%BD%E7%89%B9%E6%94%BB" title="帝都特攻" class="rel-wiki-page">帝都特攻</a></li>
+<li><a href="/guildmono2/%E6%A3%AE%E3%81%AE%E5%9C%B0%E4%B8%8B" title="森の地下" class="rel-wiki-page">森の地下</a></li>
+<li><a href="/guildmono2/%E7%AB%9C%E3%81%A8%E6%82%AA%E9%AD%94%E3%81%AE%E6%88%A6%E5%A0%B4" title="竜と悪魔の戦場" class="rel-wiki-page">竜と悪魔の戦場</a></li>
+<li><a href="/guildmono2/%E6%B5%B7%E5%BA%95%E7%A5%9E%E6%AE%BF" title="海底神殿" class="rel-wiki-page">海底神殿</a></li>
+<li><a href="/guildmono2/%E5%A4%A7%E8%9B%87%E3%81%AE%E6%B4%9E%E7%AA%9F" title="大蛇の洞窟" class="rel-wiki-page">大蛇の洞窟</a></li>
+<li><a href="/guildmono2/%E9%B3%A5%E5%B1%85" title="鳥居" class="rel-wiki-page">鳥居</a></li>
+<li><a href="/guildmono2/%E7%AB%9C%E3%81%AE%E5%B7%A3" title="竜の巣" class="rel-wiki-page">竜の巣</a></li></ul>
+
+</div>
+</div>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E3%81%AE%E4%BB%95%E6%A7%98" title="ダンジョンの仕様" class="rel-wiki-page">ダンジョンの仕様</a></li>
+<li><a href="/guildmono2/%E8%BF%B7%E5%AE%AE%E7%B4%B9%E4%BB%8B" title="迷宮紹介" class="rel-wiki-page">迷宮紹介</a></li>
+<li><a href="/guildmono2/%E8%BF%B7%E5%AE%AE%E6%94%BB%E7%95%A5" title="迷宮攻略" class="rel-wiki-page">迷宮攻略</a></li>
+<li><a href="/guildmono2/%E6%8E%A2%E7%B4%A2%E4%B8%AD%E3%81%AB%E8%B5%B7%E3%81%8D%E3%82%8B%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88" title="探索中に起きるイベント" class="rel-wiki-page">探索中に起きるイベント</a></li></ul>
+<h4 id="h4_content_2_10" class="heading-after-first">モンスター・戦闘等</h4>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" title="モンスター図鑑" class="rel-wiki-page">モンスター図鑑</a></li>
+<li><a href="/guildmono2/%E7%89%B9%E6%AE%8A%E6%95%B5%E6%83%85%E5%A0%B1%E3%83%BB%E6%94%BB%E7%95%A5" title="特殊敵情報・攻略" class="rel-wiki-page">特殊敵情報・攻略</a></li>
+<li><a href="/guildmono2/%E6%88%A6%E9%97%98%E3%83%87%E3%83%BC%E3%82%BF" title="戦闘データ" class="rel-wiki-page">戦闘データ</a></li>
+<li><a href="/guildmono2/%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6" title="ステータスについて" class="rel-wiki-page">ステータスについて</a><br />
+<br class="spacer"></li></ul>
+<h2 id="h2_content_2_11" class="heading-after-first">TIPS</h2>
+<ul class="list1"><li><a href="/guildmono2/Tips" title="Tips" class="rel-wiki-page">Tips</a></li>
+<li><!--autolink--><a href="/guildmono2/%E5%86%92%E9%99%BA%E3%81%AE%E6%89%8B%E8%A8%98%E4%B8%80%E8%A6%A7" title="冒険の手記一覧" class="rel-wiki-page">冒険の手記一覧</a><!--/autolink--></li>
+<li><a href="/guildmono2/%E3%83%A9%E3%83%93%E3%83%83%E3%83%88%E3%83%BB%E3%83%81%E3%82%B1%E3%83%83%E3%83%88" title="ラビット・チケット" class="rel-wiki-page">ラビット・チケット</a></li>
+<li><a href="/guildmono2/%E3%82%AD%E3%83%A3%E3%83%A9%E3%83%A1%E3%82%A4%E3%82%AF%E3%81%AE%E5%9F%BA%E6%9C%AC" title="キャラメイクの基本" class="rel-wiki-page">キャラメイクの基本</a></li>
+<li><a href="/guildmono2/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%82%AD%E3%83%A3%E3%83%A9%E3%83%A1%E3%82%A4%E3%82%AF" title="おすすめキャラメイク" class="rel-wiki-page">おすすめキャラメイク</a></li>
+<li><a href="/guildmono2/%E3%83%88%E3%83%AC%E3%83%8F%E3%83%B3%E3%83%BB%E9%87%91%E7%AD%96%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3%E3%83%BC" title="トレハン・金策パーティー" class="rel-wiki-page">トレハン・金策パーティー</a></li>
+<li><a href="/guildmono2/%E3%82%AA%E3%82%B9%E3%82%B9%E3%83%A1%E3%81%AE%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3" title="オススメのダンジョン" class="rel-wiki-page">オススメのダンジョン</a></li>
+<li><a href="/guildmono2/%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9" title="登場人物" class="rel-wiki-page">登場人物</a></li>
+<li><a href="/guildmono2/%E3%83%A1%E3%83%A2%E5%B8%B3" title="メモ帳" class="rel-wiki-page">メモ帳</a></li>
+<li><a href="/guildmono2/%E3%83%A1%E3%83%A2%E5%B8%B32" title="メモ帳2" class="rel-wiki-page">メモ帳2</a></li>
+<li><a href="/guildmono2/%E6%A0%BC%E9%97%98%E5%AE%B6%E3%83%A1%E3%83%A2" title="格闘家メモ" class="rel-wiki-page">格闘家メモ</a></li>
+<li><a href="/guildmono2/%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AF%E3%82%BF%E3%83%BC%E7%94%BB%E5%83%8F" title="キャラクター画像" class="rel-wiki-page">キャラクター画像</a></li>
+<li><!--autolink--><a href="/guildmono2/%E5%8F%82%E5%8A%A0%E5%9E%8B" title="参加型" class="rel-wiki-page">参加型</a><!--/autolink--></li>
+<li><a href="/guildmono2/%E5%91%A8%E5%9B%9E%E5%89%8D%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%88" title="周回前チェックリスト" class="rel-wiki-page">周回前チェックリスト</a><br />
+<br class="spacer"></li></ul>
+<h2 id="h2_content_2_12" class="heading-after-first">バージョン情報・その他</h2>
+<h3 id="h3_content_2_13" class="heading-after-first">バージョン情報</h3>
+<ul class="list1"><li><a href="/guildmono2/%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E3%82%A2%E3%83%83%E3%83%97%E5%B1%A5%E6%AD%B4" title="バージョンアップ履歴" class="rel-wiki-page">バージョンアップ履歴</a></li>
+<li><a href="/guildmono2/%E5%AE%9F%E8%A3%85%E4%BA%88%E5%AE%9A%E3%81%AE%E5%86%85%E5%AE%B9" title="実装予定の内容" class="rel-wiki-page">実装予定の内容</a></li>
+<li><a href="/guildmono2/%E3%83%90%E3%82%B0%E6%83%85%E5%A0%B1" title="バグ情報" class="rel-wiki-page">バグ情報</a></li></ul>
+<h3 id="h3_content_2_14" class="heading-after-first">掲示板</h3>
+<ul class="list1"><li><a href="/guildmono2/%E9%9B%91%E8%AB%87%E3%83%BB%E8%B3%AA%E5%95%8F%E3%83%BB%E7%9B%B8%E8%AB%87" title="雑談・質問・相談" class="rel-wiki-page">雑談・質問・相談</a></li>
+<li><a href="/guildmono2/%E6%83%85%E5%A0%B1%E6%8F%90%E4%BE%9B%E6%8E%B2%E7%A4%BA%E6%9D%BF" title="情報提供掲示板" class="rel-wiki-page">情報提供掲示板</a></li>
+<li><a href="/guildmono2/Wiki%E9%81%8B%E7%94%A8%E3%83%BB%E7%B7%A8%E9%9B%86%E9%96%A2%E9%80%A3" title="Wiki運用・編集関連" class="rel-wiki-page">Wiki運用・編集関連</a></li>
+<li><a href="/guildmono2/%E6%8B%9B%E5%BE%85ID" title="招待ID" class="rel-wiki-page">招待ID交換掲示板</a></li></ul>
+<h3 id="h3_content_2_15" class="heading-after-first">外部リンク</h3>
+<ul class="list1"><li><a href="https://discord.gg/uDKDsCDHBH"  rel="nofollow">非公式Discord</a>(招待リンク)</li>
+<li><a href="/guildmono2/2ch%E3%83%BB%E3%81%97%E3%81%9F%E3%82%89%E3%81%B0" title="2ch・したらば" class="rel-wiki-page">5chスレッド</a></li></ul>
+<h3 id="h3_content_2_16" class="heading-after-first">その他</h3>
+<ul class="list1"><li><a href="http://wikiwiki.jp/guildmono2/?cmd=edit&amp;page=MenuBar"  rel="nofollow">MENU編集</a></li>
+<li><a href="/guildmono2/Wiki%E7%B7%A8%E9%9B%86%E7%B7%B4%E7%BF%92%E5%A0%B4" title="Wiki編集練習場" class="rel-wiki-page">Wiki編集練習場</a></li>
+<li><a href="/guildmono2/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC" title="テンプレ" class="rel-wiki-page">編集用テンプレート</a></li>
+<li><a href="/guildmono2/%E7%94%BB%E5%83%8F%E6%B7%BB%E4%BB%98%E7%94%A8%E3%83%9A%E3%83%BC%E3%82%B8" title="画像添付用ページ" class="rel-wiki-page">画像添付用ページ</a></li>
+<li><a href="/guildmono2/wiki%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4" title="wiki更新履歴" class="rel-wiki-page">Wiki更新履歴</a></li>
+<li><a href="/guildmono2/RecentDeleted" title="RecentDeleted" class="rel-wiki-page">RecentDeleted</a></li>
+<li><a href="/guildmono2/Glossary" title="Glossary" class="rel-wiki-page">Glossary</a></li>
+<li><a href="/guildmono2/AutoAliasName" title="AutoAliasName" class="rel-wiki-page">AutoAliasName</a></li>
+<li><a href="/guildmono2/%3Aconfig/AutoLink" title=":config/AutoLink" class="rel-wiki-page">オートリンク除外設定</a></li></ul>
+<hr class="full_hr" />
+<p>今日：<span class="wikiwiki-counter wikiwiki-counter-today">?</span><br />
+昨日：<span class="wikiwiki-counter wikiwiki-counter-yesterday">?</span><br />
+合計：<span class="wikiwiki-counter wikiwiki-counter-total">?</span><br />
+現在約<span class="wikiwiki-online">?</span>人が閲覧中</p>
+<hr class="full_hr" />
+<div class="recent-container" data-recent-hash="c0f867c5630a31a0f7cb50b2360e80ea"></div>
+<div style="text-align:center">〔<a href="/guildmono2/%E4%BA%BA%E6%B0%97100" title="人気100" class="rel-wiki-page"><strong>人気</strong></a>/<a href="/guildmono2/%E4%BB%8A%E6%97%A5100" title="今日100" class="rel-wiki-page"><strong>今日人気</strong></a>〕〔<a href="/guildmono2/RecentChanges" title="RecentChanges" class="rel-wiki-page"><strong>最新</strong></a>〕</div>
+<hr class="full_hr" />                </div>
+                <div class="admenu-sticky">
+<!-- /19033742/WIKIWIKI_PC_MENU_STICKY -->
+<div id='div-gpt-ad-1567834179057-0'></div>
+</div>
+<script>
+if (document.documentElement.clientWidth > 805 && !wi_ismobile && wi_group === 'N' && wi_agreement === 'false' && !wi_isinbound &&
+    document.getElementById('body').clientHeight - document.getElementById('menubar').clientHeight > 1000) {
+    googletag.cmd.push(() => {
+        googletag.display(
+            googletag.defineSlot('/19033742/WIKIWIKI_PC_MENU_STICKY', [[120,600],[160,600],[1,1]], 'div-gpt-ad-1567834179057-0').addService(googletag.pubads())
+        );
+    });
+    defineSlotFlux.push({"slotID": "div-gpt-ad-1567834179057-0", "sizes": [[160,600]], "slotName":"WIKIWIKI_PC_MENU_STICKY"});
+}
+</script>
+<style>
+.admenu-sticky {
+    display: flex;
+    justify-content: center;
+    position: -webkit-sticky;
+    position: sticky;
+    margin-top: 50px;
+    top: 50px;
+    max-width: 160px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+
+            </div>
+            </div>
+
+    
+    <div id="footer">
+                <div class="container">
+            <hr />
+            <div class="footer-block clearfix">
+                <div class="footer-block-item-left" id="signature">
+                    <!-- google_ad_section_start(weight=ignore) -->
+                    レンタルWIKI by <a href="https://wikiwiki.jp/" title="無料レンタルWIKIサービス">WIKIWIKI.jp*</a>&nbsp;/&nbsp;
+                    <a href="https://wikiwiki.jp/pp/aboutad" title="広告について">広告について</a> /
+                    無料レンタル掲示板 <a href="https://z.wikiwiki.jp/" title="zawazawa">zawazawa</a>
+                    <!-- google_ad_section_end -->
+                </div>
+                <div class="footer-block-item-right">
+                    <div class="footer-mixirss">
+                        <div class="toolbar"><a href="/guildmono2/::cmd/mixirss" title="最終更新のRSS" rel="nofollow"><span class="system-icon rss"></span></a></div>                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+html:has(
+  body[style*="position: fixed"], 
+  #im_interstitial_pc[style*="display: flex"]
+) #gpt_unit_\/19033742\/WIKIWIKI_SP_OVERLAY_ANCHOR_0 {
+  display: none !important;
+}
+</style><div id="pageload" style="display: none" data-pageload="{&quot;time&quot;:{&quot;all&quot;:{&quot;real&quot;:0.08843111991882324,&quot;cost&quot;:0.11876606941223145},&quot;body&quot;:{&quot;real&quot;:0.08249902725219727,&quot;cost&quot;:0.08249902725219727},&quot;main&quot;:{&quot;real&quot;:0.07950305938720703,&quot;cost&quot;:0.07950305938720703},&quot;menu&quot;:{&quot;real&quot;:0.029432058334350586,&quot;cost&quot;:0.029432058334350586},&quot;foot&quot;:{&quot;real&quot;:0.0009028911590576172,&quot;cost&quot;:0.0009028911590576172}},&quot;include&quot;:1,&quot;memory&quot;:3200088,&quot;io&quot;:{&quot;read&quot;:{&quot;files&quot;:6,&quot;bytes&quot;:144083,&quot;locks&quot;:3},&quot;write&quot;:{&quot;files&quot;:0,&quot;bytes&quot;:0,&quot;locks&quot;:0},&quot;directory&quot;:{&quot;traversals&quot;:0,&quot;files&quot;:0},&quot;misc&quot;:665},&quot;contentSize&quot;:{&quot;all&quot;:157734,&quot;body&quot;:122407},&quot;timestamp&quot;:&quot;2026-09-08 23:13:11&quot;}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/jquery.mark.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/js/fontawesome.min.js" data-auto-replace-svg="false"></script>
+<script type="text/javascript" src="https://cdn.wikiwiki.jp/to/w/common/assets/dist/wikiwiki-3a0f573feee6f9d1f58c.min.js"></script>
+    <script>
+        if (window.FontAwesome) {
+            window.FontAwesome.dom.watch();
+        } else {
+            console.warn('FontAwesome is not loaded.');
+        }
+    </script>
+<div id="wikiwiki-pageview-counter" data-endpoint="https://counter.wikiwiki.jp/c/guildmono2/pv/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91" style="display: none;"></div>
+<script>
+    $('#wikiwiki-pageview-counter').pageview();
+</script>
+<script type="text/javascript">
+    bootLazy.addJqPluginInit('.fold-container', function() {
+        this.fold({
+            buttonSelector: '.fold-toggle-button',
+            openClassName: 'fold-open'
+        });
+    });
+</script>
+    <script type="text/javascript">
+        bootLazy.addJqPluginInit('.recent-container[data-recent-hash="c0f867c5630a31a0f7cb50b2360e80ea"]', function() {
+            this.recent({"timestamp":1788867225,"list":[{"time":1788867225,"page":"コメント/雑談・質問・相談","link":"/guildmono2/%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/%E9%9B%91%E8%AB%87%E3%83%BB%E8%B3%AA%E5%95%8F%E3%83%BB%E7%9B%B8%E8%AB%87"},{"time":1787979663,"page":"竜人王の小手","link":"/guildmono2/%E7%AB%9C%E4%BA%BA%E7%8E%8B%E3%81%AE%E5%B0%8F%E6%89%8B"},{"time":1787979236,"page":"オススメのダンジョン","link":"/guildmono2/%E3%82%AA%E3%82%B9%E3%82%B9%E3%83%A1%E3%81%AE%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3"},{"time":1787975972,"page":"トレハン・金策パーティー","link":"/guildmono2/%E3%83%88%E3%83%AC%E3%83%8F%E3%83%B3%E3%83%BB%E9%87%91%E7%AD%96%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3%E3%83%BC"},{"time":1787828603,"page":"鉄拳制裁","link":"/guildmono2/%E9%89%84%E6%8B%B3%E5%88%B6%E8%A3%81"},{"time":1787711378,"page":"ボディアーマー","link":"/guildmono2/%E3%83%9C%E3%83%87%E3%82%A3%E3%82%A2%E3%83%BC%E3%83%9E%E3%83%BC"},{"time":1787196764,"page":"おすすめパーティ編成","link":"/guildmono2/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3%E7%B7%A8%E6%88%90"},{"time":1786684626,"page":"道化師の魂","link":"/guildmono2/%E9%81%93%E5%8C%96%E5%B8%AB%E3%81%AE%E9%AD%82"},{"time":1786278645,"page":"招待ID","link":"/guildmono2/%E6%8B%9B%E5%BE%85ID"},{"time":1786277646,"page":"トリトンの弓","link":"/guildmono2/%E3%83%88%E3%83%AA%E3%83%88%E3%83%B3%E3%81%AE%E5%BC%93"},{"time":1786057750,"page":"攻撃系スキル","link":"/guildmono2/%E6%94%BB%E6%92%83%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB"},{"time":1785936554,"page":"メモ帳2","link":"/guildmono2/%E3%83%A1%E3%83%A2%E5%B8%B32"},{"time":1785871465,"page":"ドラゴンロッド","link":"/guildmono2/%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3%E3%83%AD%E3%83%83%E3%83%89"},{"time":1785178045,"page":"旗本の盾","link":"/guildmono2/%E6%97%97%E6%9C%AC%E3%81%AE%E7%9B%BE"},{"time":1785034821,"page":"ウィンドドラゴン","link":"/guildmono2/%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3"},{"time":1784895180,"page":"神魔の守護剣","link":"/guildmono2/%E7%A5%9E%E9%AD%94%E3%81%AE%E5%AE%88%E8%AD%B7%E5%89%A3"},{"time":1784895010,"page":"ミラージュブーツ","link":"/guildmono2/%E3%83%9F%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A5%E3%83%96%E3%83%BC%E3%83%84"},{"time":1784885890,"page":"影のローブ","link":"/guildmono2/%E5%BD%B1%E3%81%AE%E3%83%AD%E3%83%BC%E3%83%96"},{"time":1784885647,"page":"タワーシールド","link":"/guildmono2/%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%B7%E3%83%BC%E3%83%AB%E3%83%89"},{"time":1784884786,"page":"ミラクルシールド","link":"/guildmono2/%E3%83%9F%E3%83%A9%E3%82%AF%E3%83%AB%E3%82%B7%E3%83%BC%E3%83%AB%E3%83%89"},{"time":1784300106,"page":"おすすめキャラメイク","link":"/guildmono2/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%82%AD%E3%83%A3%E3%83%A9%E3%83%A1%E3%82%A4%E3%82%AF"},{"time":1784289924,"page":"コメント/情報提供掲示板","link":"/guildmono2/%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/%E6%83%85%E5%A0%B1%E6%8F%90%E4%BE%9B%E6%8E%B2%E7%A4%BA%E6%9D%BF"},{"time":1784110417,"page":"ミラクルラビット","link":"/guildmono2/%E3%83%9F%E3%83%A9%E3%82%AF%E3%83%AB%E3%83%A9%E3%83%93%E3%83%83%E3%83%88"},{"time":1783873866,"page":"戦闘データ","link":"/guildmono2/%E6%88%A6%E9%97%98%E3%83%87%E3%83%BC%E3%82%BF"},{"time":1783871037,"page":"ステータスについて","link":"/guildmono2/%E3%82%B9%E3%83%86%E3%83%BC%E3%82%BF%E3%82%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6"},{"time":1783862202,"page":"踊る人形(魔造)","link":"/guildmono2/%E8%B8%8A%E3%82%8B%E4%BA%BA%E5%BD%A2%28%E9%AD%94%E9%80%A0%29"},{"time":1783858313,"page":"ロードプレート","link":"/guildmono2/%E3%83%AD%E3%83%BC%E3%83%89%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88"},{"time":1783857921,"page":"Tips","link":"/guildmono2/Tips"},{"time":1783846601,"page":"コメント/おすすめパーティ編成","link":"/guildmono2/%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3%E7%B7%A8%E6%88%90"},{"time":1783830333,"page":"スカルドラゴン","link":"/guildmono2/%E3%82%B9%E3%82%AB%E3%83%AB%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3"},{"time":1783783965,"page":"夢の中で手に入れし","link":"/guildmono2/%E5%A4%A2%E3%81%AE%E4%B8%AD%E3%81%A7%E6%89%8B%E3%81%AB%E5%85%A5%E3%82%8C%E3%81%97"},{"time":1783721079,"page":"ライトセイバー","link":"/guildmono2/%E3%83%A9%E3%82%A4%E3%83%88%E3%82%BB%E3%82%A4%E3%83%90%E3%83%BC"},{"time":1782912350,"page":"コメント/おすすめキャラメイク","link":"/guildmono2/%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%82%AD%E3%83%A3%E3%83%A9%E3%83%A1%E3%82%A4%E3%82%AF"},{"time":1782033630,"page":"ハッピーラビット","link":"/guildmono2/%E3%83%8F%E3%83%83%E3%83%94%E3%83%BC%E3%83%A9%E3%83%93%E3%83%83%E3%83%88"},{"time":1781264193,"page":"制限ボス迷宮と副産物","link":"/guildmono2/%E5%88%B6%E9%99%90%E3%83%9C%E3%82%B9%E8%BF%B7%E5%AE%AE%E3%81%A8%E5%89%AF%E7%94%A3%E7%89%A9"},{"time":1781263131,"page":"魔導士の杖","link":"/guildmono2/%E9%AD%94%E5%B0%8E%E5%A3%AB%E3%81%AE%E6%9D%96"},{"time":1781152663,"page":"防御系スキル","link":"/guildmono2/%E9%98%B2%E5%BE%A1%E7%B3%BB%E3%82%B9%E3%82%AD%E3%83%AB"},{"time":1780578964,"page":"どう見ても","link":"/guildmono2/%E3%81%A9%E3%81%86%E8%A6%8B%E3%81%A6%E3%82%82"},{"time":1779625153,"page":"アメジスト","link":"/guildmono2/%E3%82%A2%E3%83%A1%E3%82%B8%E3%82%B9%E3%83%88"},{"time":1778329450,"page":"エンシェントドラゴン","link":"/guildmono2/%E3%82%A8%E3%83%B3%E3%82%B7%E3%82%A7%E3%83%B3%E3%83%88%E3%83%89%E3%83%A9%E3%82%B4%E3%83%B3"},{"time":1778281779,"page":"天の羽衣","link":"/guildmono2/%E5%A4%A9%E3%81%AE%E7%BE%BD%E8%A1%A3"},{"time":1777973421,"page":"魔造生物データ/後半","link":"/guildmono2/%E9%AD%94%E9%80%A0%E7%94%9F%E7%89%A9%E3%83%87%E3%83%BC%E3%82%BF/%E5%BE%8C%E5%8D%8A"},{"time":1777525732,"page":"特殊敵情報・攻略/後半","link":"/guildmono2/%E7%89%B9%E6%AE%8A%E6%95%B5%E6%83%85%E5%A0%B1%E3%83%BB%E6%94%BB%E7%95%A5/%E5%BE%8C%E5%8D%8A"},{"time":1777379247,"page":"アイテムでるでる","link":"/guildmono2/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0%E3%81%A7%E3%82%8B%E3%81%A7%E3%82%8B"},{"time":1777258710,"page":"魔法使い／僧侶魔法一覧","link":"/guildmono2/%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%EF%BC%8F%E5%83%A7%E4%BE%B6%E9%AD%94%E6%B3%95%E4%B8%80%E8%A6%A7"},{"time":1776822045,"page":"クロスハンマー","link":"/guildmono2/%E3%82%AF%E3%83%AD%E3%82%B9%E3%83%8F%E3%83%B3%E3%83%9E%E3%83%BC"},{"time":1776524775,"page":"忍者の手甲","link":"/guildmono2/%E5%BF%8D%E8%80%85%E3%81%AE%E6%89%8B%E7%94%B2"},{"time":1776476784,"page":"投擲用の","link":"/guildmono2/%E6%8A%95%E6%93%B2%E7%94%A8%E3%81%AE"},{"time":1774952529,"page":"マッスルスーツ","link":"/guildmono2/%E3%83%9E%E3%83%83%E3%82%B9%E3%83%AB%E3%82%B9%E3%83%BC%E3%83%84"},{"time":1774789512,"page":"物理結界","link":"/guildmono2/%E7%89%A9%E7%90%86%E7%B5%90%E7%95%8C"}]});
+        });
+    </script>
+    <script>
+        bootLazy.addJqPluginInit('#responsive-navigation', function() {
+            this.responsiveNavigation({
+                menuBarSelector: '#menubar',
+                editMenuSelector: '#edit-menu',
+
+                mainContentsBottomElement: '#main-contents-bottom',
+                sidebarBottomElement: '#sidebar-bottom',
+                menuBarContainerElement: '#contents .column-left',
+                footerElement: '#footer',
+
+                overlayAdRenderedEventName: 'overlay-ad-rendered',
+                overlayAdMarginTop: 25
+            });
+        });
+    </script>
+    <script>
+        $('#share-button-root').sharePanel({
+            title: "モンスター図鑑 - 冒険者ギルド物語2 Wiki*",
+            controlPanelUrl: "https:\/\/c.wikiwiki.jp\/wiki\/guildmono2\/design",
+            imageUrl: "https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/wikiwiki_ogp.png?v=4",
+            description: "",
+            shareUrl: "https:\/\/wikiwiki.jp\/guildmono2\/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91",
+            shortUrlRequestUrl: "\/guildmono2\/::cmd\/short_url?mode=json&page=%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91",
+            hasOgSettings: false,
+        })
+    </script>
+<script>
+    $('#admin-contact-root').adminContact({
+        logoImgUrl: "https:\/\/cdn.wikiwiki.jp\/to\/w\/common\/image\/pukiwiki.svg?v=4",
+        pageTitle: "冒険者ギルド物語2 Wiki*",
+        controlPanelUrl: "https:\/\/c.wikiwiki.jp\/wiki\/guildmono2\/settings",
+        contact: "",
+        helpLink: 'https://wikiwiki.jp/pp/admin_contact',
+    });
+</script>
+<script>
+$("#load-panel-root").loadpanel({
+    dataSelector: "#pageload",
+    helpLink: 'https://wikiwiki.jp/pp/page_load_panel'
+});
+</script>
+<script>
+    $('.admin-login-status').adminLoginStatus({
+        cookieName: 'login_session',
+    });
+</script>
+<script>
+    $(function() {
+        $('.search-words').searchWordHighlight({
+            paramName: 'word',
+            selector: "#content,#note",
+            limit: 10,
+            markedClassResolver: function (i) { return "word" + i; }
+        });
+    });
+</script>
+<script>$(".realtime-date").realtimeDate();</script>
+<script>
+    $("body").notificationBar();
+</script>
+<script>
+$("#contents").anchorLink({
+    url: '/guildmono2/%E3%83%A2%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%BC%E5%9B%B3%E9%91%91',
+});
+</script>
+    <script>
+        bootLazy.addJqPluginInit('.tooltip', function() {
+            this.tooltip();
+        });
+    </script>
+    <script>
+        bootLazy.addPlainScript(function() {
+            lightbox.option({
+                resizeDuration: 0
+            });
+        });
+    </script>
+<script>
+    $(function() {
+        window.bootLazy.bootOn(document);
+    });
+</script>
+<script>
+    $(document).pukiwiki();
+</script>
+
+<script>
+jQuery(function() {
+    // Cookie は名前を渡すだけ。読むのはクライアント側。
+    // サーバーで読んで本文に埋めると、レスポンスキャッシュがそれを vary していないため、
+    // 最初にキャッシュを作った人の Cookie 状態が後続の全員に配られる。
+    $('form').usageStatistics({
+        keyName: 'usageStatistics',
+        smsAuthCookieName: 'authkey',
+        hasPostedCookieName: '__posted2',
+    });
+    $(document).browsingStatistics({
+        keyName: 'browsingStatistics'
+    });
+});
+</script>
+</body>
+</html>
